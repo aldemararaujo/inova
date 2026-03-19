@@ -1,1 +1,368 @@
-.
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Trindade da Inovação</title>
+<!-- Paleta: Vibrant Tech (Deep Blue #1E293B, Cyan #06B6D4, Orange #F97316, Yellow #EAB308) -->
+<!-- Plano: 1. Cabeçalho/Intro -> 2. Diagrama de Venn (Rótulos externos distanciados e texto interno ajustado) -> 3. Fases de Validação -> 4. Riscos de Desequilíbrio (Radar Chart com quebra manual de linha) -> 5. Estratégias de Pitch (Stacked Bar com labels em duas linhas e Cards com 3 linhas) -->
+<!-- Confirmação: NÃO foi utilizado Mermaid JS NEM SVG em nenhuma parte deste ficheiro. -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+.chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+@media (min-width: 768px) { .chart-container { height: 400px; max-width: 700px; } }
+
+/* Estilização do Diagrama de Venn com Rótulos Externos e Texto Interno Ajustado */
+.venn-container { position: relative; width: 100%; max-width: 600px; height: 500px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+.venn-wrapper { position: relative; width: 300px; height: 300px; }
+.venn-circle { position: absolute; width: 190px; height: 190px; border-radius: 50%; mix-blend-mode: multiply; display: flex; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.95rem; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.3s; }
+
+/* Posicionamento do texto dentro dos círculos para evitar sobreposição no centro */
+.circle-desejavel { top: 0; left: 55px; background-color: rgba(6, 182, 212, 0.85); align-items: flex-start; justify-content: center; padding-top: 35px; }
+.circle-viavel { bottom: 0; left: 0; background-color: rgba(249, 115, 22, 0.85); align-items: flex-end; justify-content: flex-start; padding: 0 0 40px 30px; }
+.circle-exequivel { bottom: 0; right: 0; background-color: rgba(234, 179, 8, 0.85); align-items: flex-end; justify-content: flex-end; padding: 0 30px 40px 0; }
+
+.venn-center { position: absolute; top: 115px; left: 115px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.65rem; color: #FFFFFF; text-align: center; z-index: 10; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); pointer-events: none; }
+
+/* Rótulos das Perguntas (Ainda mais afastados) */
+.venn-question { position: absolute; font-size: 0.85rem; font-weight: 700; width: 160px; text-align: center; line-height: 1.3; }
+.q-desejavel { top: -75px; left: 50%; transform: translateX(-50%); color: #0891B2; }
+.q-viavel { bottom: -60px; left: -100px; color: #C2410C; }
+.q-exequivel { bottom: -60px; right: -100px; color: #A16207; }
+
+@media (max-width: 768px) {
+    .venn-container { transform: scale(0.8); height: 420px; }
+    .q-viavel { left: -40px; }
+    .q-exequivel { right: -40px; }
+}
+</style>
+</head>
+<body class="antialiased selection:bg-cyan-300 selection:text-slate-900">
+
+<header class="bg-slate-900 text-white py-16 px-6 text-center shadow-xl border-b-8 border-cyan-500">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-cyan-400 text-6xl mb-4">🚀</div>
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">A Trindade da Inovação</h1>
+        <p class="text-lg md:text-2xl font-light text-slate-300 max-w-2xl mx-auto">
+            O equilíbrio perfeito entre o <span class="text-cyan-400 font-semibold">Desejo</span>, a <span class="text-yellow-400 font-semibold">Técnica</span> e o <span class="text-orange-400 font-semibold">Negócio</span> para o sucesso de produtos.
+        </p>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
+
+    <!-- Secção 1: O Epicentro -->
+    <section class="text-center">
+        <h2 class="text-3xl font-bold text-slate-800 mb-6">O Epicentro do Sucesso</h2>
+        <p class="text-slate-600 max-w-3xl mx-auto mb-20 text-lg leading-relaxed">
+            A verdadeira inovação exige uma intersecção exata. Abaixo, o diagrama mostra onde os pilares se encontram. Note que as perguntas de validação ajudam a situar o projeto fora da zona de conforto.
+        </p>
+        
+        <div class="venn-container">
+            <div class="venn-wrapper">
+                <!-- Círculos com texto posicionado para não sobrepor o centro -->
+                <div class="venn-circle circle-desejavel">Desejável</div>
+                <div class="venn-circle circle-viavel">Viável</div>
+                <div class="venn-circle circle-exequivel">Exequível</div>
+                
+                <!-- Perguntas afastadas estrategicamente -->
+                <div class="venn-question q-desejavel">"As pessoas realmente querem isso?"</div>
+                <div class="venn-question q-viavel">"Este modelo gera lucro ou retorno?"</div>
+                <div class="venn-question q-exequivel">"Temos técnica para construir isso?"</div>
+                
+                <!-- Centro -->
+                <div class="venn-center">INOVAÇÃO<br>SUSTENTÁVEL</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secção 2: Jornada de Validação -->
+    <section>
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">A Jornada de Validação</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">Um roteiro estruturado de ferramentas essenciais para cada etapa da construção do projeto, partindo da empatia até à arquitetura técnica final.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-xl shadow-md border-t-4 border-cyan-500 p-6 flex flex-col h-full transform transition hover:-translate-y-1">
+                <div class="text-4xl mb-4 text-cyan-500">❤️</div>
+                <h3 class="text-xl font-bold mb-2">1. Desejabilidade</h3>
+                <p class="text-slate-500 text-sm mb-6 flex-grow">Foque-se inteiramente no ser humano antes de codificar. Resolva dores reais.</p>
+                <ul class="space-y-3 text-sm font-medium text-slate-700">
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> Mapa de Empatia</li>
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> Value Proposition Canvas</li>
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> The Mom Test (Entrevistas)</li>
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> Carrd (Smoke Test)</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border-t-4 border-orange-500 p-6 flex flex-col h-full transform transition hover:-translate-y-1">
+                <div class="text-4xl mb-4 text-orange-500">📊</div>
+                <h3 class="text-xl font-bold mb-2">2. Viabilidade</h3>
+                <p class="text-slate-500 text-sm mb-6 flex-grow">Valide o negócio. Garanta que a solução seja financeiramente sustentável a longo prazo.</p>
+                <ul class="space-y-3 text-sm font-medium text-slate-700">
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Lean Canvas</li>
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Matriz de Competidores</li>
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Análise TAM, SAM, SOM</li>
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Unit Economics</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border-t-4 border-yellow-500 p-6 flex flex-col h-full transform transition hover:-translate-y-1">
+                <div class="text-4xl mb-4 text-yellow-500">⚙️</div>
+                <h3 class="text-xl font-bold mb-2">3. Exequibilidade</h3>
+                <p class="text-slate-500 text-sm mb-6 flex-grow">Mobilize recursos e conhecimento técnico. Construa com qualidade e agilidade.</p>
+                <ul class="space-y-3 text-sm font-medium text-slate-700">
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> PRD via ChatGPT/Gemini</li>
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> Prototipagem</li>
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> Lovable.dev</li>
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> Jira / Trello (Sprints)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secção 3: Radar de Riscos -->
+    <section class="bg-white p-8 md:p-12 rounded-2xl shadow-lg border border-slate-100">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">Os Riscos do Desequilíbrio</h2>
+                <p class="text-slate-600 mb-6 leading-relaxed">
+                    A inclinação natural humana é focar apenas nas dimensões que dominamos. Ignorar um dos pilares da trindade resulta em falhas previsíveis.
+                </p>
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-cyan-500">
+                        <h4 class="font-bold text-slate-800">Projeto de Vaidade</h4>
+                        <p class="text-sm text-slate-600">Alta Desejabilidade + Alta Exequibilidade. Os utilizadores adoram, funciona bem, mas não gera retorno sustentável.</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-orange-500">
+                        <h4 class="font-bold text-slate-800">Produto Empurrado</h4>
+                        <p class="text-sm text-slate-600">Alta Exequibilidade + Alta Viabilidade. Sistema robusto e rentável no papel, mas que ninguém deseja utilizar.</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-slate-800">A Alucinação</h4>
+                        <p class="text-sm text-slate-600">Alta Desejabilidade + Alta Viabilidade. Ideia genial, mas a tecnologia necessária é inacessível para a equipe.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full flex justify-center">
+                <div class="chart-container">
+                    <canvas id="risksChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secção 4: Estratégias de Pitch -->
+    <section class="bg-slate-900 rounded-2xl p-8 md:p-12 text-white shadow-2xl">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-white mb-4">Estratégias de Pitch</h2>
+            <p class="text-slate-300 max-w-2xl mx-auto leading-relaxed">Adapte a comunicação do projeto conforme o tempo disponível. O foco deve transitar entre os pilares dependendo do cenário de apresentação.</p>
+        </div>
+        
+        <div class="chart-container mb-8">
+            <canvas id="pitchChart"></canvas>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]">
+                <div class="font-bold text-white text-xl mb-1">1 Minutos</div>
+                <div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Elevator Pitch</div>
+                <div class="text-xs text-slate-300">Foco total na dor e na proposta única.</div>
+            </div>
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]">
+                <div class="font-bold text-white text-xl mb-1">3 Minutos</div>
+                <div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Rocket Pitch</div>
+                <div class="text-xs text-slate-300">Product-Market Fit e diferencial técnico.</div>
+            </div>
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]">
+                <div class="font-bold text-white text-xl mb-1">5 Minutos</div>
+                <div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Standard Pitch</div>
+                <div class="text-xs text-slate-300">Equilíbrio perfeito da Trindade da Inovação.</div>
+            </div>
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]">
+                <div class="font-bold text-white text-xl mb-1">7 Minutos</div>
+                <div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Deep Dive Pitch</div>
+                <div class="text-xs text-slate-300">Detalhamento GTM e viabilidade financeira.</div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-slate-100 py-12 border-t border-slate-200 mt-12 text-center text-slate-500 text-sm">
+    <div class="max-w-2xl mx-auto px-4">
+        <p class="mb-4 text-slate-600 font-medium">
+            Não tenha medo de pivotar, o fracasso no papel é infinitamente mais barato do que após o desenvolvimento.
+        </p>
+        <p class="font-semibold text-slate-400 uppercase tracking-widest text-xs">A Trindade da Inovação © 2026</p>
+    </div>
+</footer>
+
+<script>
+    function wrapLabel(label, limit) {
+        if (Array.isArray(label)) return label;
+        if (typeof label !== 'string') return label;
+        if (label.length <= limit) return label;
+        const words = label.split(' ');
+        let lines = [];
+        let currentLine = words[0];
+        for (let i = 1; i < words.length; i++) {
+            if (currentLine.length + words[i].length + 1 <= limit) {
+                currentLine += ' ' + words[i];
+            } else {
+                lines.push(currentLine);
+                currentLine = words[i];
+            }
+        }
+        lines.push(currentLine);
+        return lines;
+    }
+
+    const wrapLimit = 16;
+
+    window.onload = function() {
+        // --- Radar Chart ---
+        const rawLabelsRadar = [
+            'Desejabilidade (O Desejo)', 
+            'Exequibilidade (A Técnica)', 
+            ['Viabilidade', '(O Negócio)']
+        ];
+        
+        const labelsRadar = rawLabelsRadar.map(l => wrapLabel(l, wrapLimit));
+
+        const ctxRisks = document.getElementById('risksChart').getContext('2d');
+        new Chart(ctxRisks, {
+            type: 'radar',
+            data: {
+                labels: labelsRadar,
+                datasets: [
+                    {
+                        label: 'Inovação Real',
+                        data: [100, 100, 100],
+                        backgroundColor: 'rgba(30, 41, 59, 0.2)',
+                        borderColor: '#1E293B',
+                        pointBackgroundColor: '#1E293B',
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Projeto de Vaidade',
+                        data: [90, 90, 20],
+                        backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                        borderColor: '#06B6D4',
+                        borderDash: [5, 5]
+                    },
+                    {
+                        label: 'Produto Empurrado',
+                        data: [20, 90, 90],
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                        borderColor: '#F97316',
+                        borderDash: [5, 5]
+                    },
+                    {
+                        label: 'Alucinação',
+                        data: [90, 20, 90],
+                        backgroundColor: 'rgba(234, 179, 8, 0.2)',
+                        borderColor: '#EAB308',
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.1)' },
+                        grid: { color: 'rgba(0,0,0,0.1)' },
+                        pointLabels: { 
+                            font: { family: 'Inter', size: 12, weight: 'bold' }, 
+                            color: '#334155',
+                            padding: 15
+                        },
+                        ticks: { display: false, min: 0, max: 100 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: 'Inter' }, usePointStyle: true } },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) { return label.join(' '); }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Stacked Bar Chart ---
+        // Alteração conforme solicitado: Primeira linha Nome, segunda linha Tempo e palavra min
+        const rawLabelsPitch = [
+            ['Elevator', '1 min'], 
+            ['Rocket', '3 min'], 
+            ['Standard', '5 min'], 
+            ['Deep Dive', '7 min']
+        ];
+        // Não aplicamos wrapLabel aqui pois já definimos o array multiline manualmente
+        const labelsPitch = rawLabelsPitch;
+
+        const ctxPitch = document.getElementById('pitchChart').getContext('2d');
+        new Chart(ctxPitch, {
+            type: 'bar',
+            data: {
+                labels: labelsPitch,
+                datasets: [
+                    {
+                        label: 'Desejabilidade (Problema/Valor)',
+                        data: [80, 50, 35, 25],
+                        backgroundColor: '#06B6D4'
+                    },
+                    {
+                        label: 'Exequibilidade (Tecnologia/MVP)',
+                        data: [10, 30, 35, 30],
+                        backgroundColor: '#EAB308'
+                    },
+                    {
+                        label: 'Viabilidade (Negócio/Finanças)',
+                        data: [10, 20, 30, 45],
+                        backgroundColor: '#F97316'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: { stacked: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#CBD5E1', callback: function(value){return value + '%'} } },
+                    y: { stacked: true, grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold', family: 'Inter' } } }
+                },
+                plugins: {
+                    legend: { position: 'top', labels: { color: '#F8FAFC', font: { family: 'Inter' }, usePointStyle: true } },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) { return label.join(' '); }
+                                return label;
+                            },
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + '% do tempo';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>
