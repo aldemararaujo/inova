@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Trindade da Inovação</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+.chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+@media (min-width: 768px) { .chart-container { height: 400px; max-width: 700px; } }
+.venn-container { position: relative; width: 100%; max-width: 600px; height: 500px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+.venn-wrapper { position: relative; width: 300px; height: 300px; }
+.venn-circle { position: absolute; width: 190px; height: 190px; border-radius: 50%; mix-blend-mode: multiply; display: flex; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.95rem; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.3s; }
+.circle-desejavel { top: 0; left: 55px; background-color: rgba(6, 182, 212, 0.85); align-items: flex-start; justify-content: center; padding-top: 35px; }
+.circle-viavel { bottom: 0; left: 0; background-color: rgba(249, 115, 22, 0.85); align-items: flex-end; justify-content: flex-start; padding: 0 0 40px 30px; }
+.circle-exequivel { bottom: 0; right: 0; background-color: rgba(234, 179, 8, 0.85); align-items: flex-end; justify-content: flex-end; padding: 0 30px 40px 0; }
+.venn-center { position: absolute; top: 115px; left: 115px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.65rem; color: #FFFFFF; text-align: center; z-index: 10; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); pointer-events: none; }
+.venn-question { position: absolute; font-size: 0.85rem; font-weight: 700; width: 160px; text-align: center; line-height: 1.3; }
+.q-desejavel { top: -75px; left: 50%; transform: translateX(-50%); color: #0891B2; }
+.q-viavel { bottom: -60px; left: -100px; color: #C2410C; }
+.q-exequivel { bottom: -60px; right: -100px; color: #A16207; }
+@media (max-width: 768px) {
+    .venn-container { transform: scale(0.8); height: 420px; }
+    .q-viavel { left: -40px; }
+    .q-exequivel { right: -40px; }
+}
+.pillar-grid { display:grid; grid-template-columns:1.12fr .88fr; gap:1.5rem; }
+@media (max-width: 900px){ .pillar-grid { grid-template-columns:1fr; } }
+.pillar-shell { border-radius: 1.5rem; padding: 2rem; box-shadow: 0 18px 40px rgba(15,23,42,0.08); }
+.pillar-shell.desejabilidade { background: linear-gradient(135deg, #ecfeff 0%, #ffffff 42%, #ecfeff 100%); border:1px solid #a5f3fc; }
+.pillar-shell.viabilidade { background: linear-gradient(135deg, #fff7ed 0%, #ffffff 42%, #fff7ed 100%); border:1px solid #fed7aa; }
+.pillar-shell.exequibilidade { background: linear-gradient(135deg, #fefce8 0%, #ffffff 42%, #fefce8 100%); border:1px solid #fde68a; }
+.step-btn { transition: all .25s ease; }
+.step-btn:hover { transform: translateY(-2px); }
+.step-btn.active.desejabilidade { background:#0891b2; color:#fff; border-color:#0891b2; box-shadow:0 10px 24px rgba(8,145,178,0.22); }
+.step-btn.active.viabilidade { background:#ea580c; color:#fff; border-color:#ea580c; box-shadow:0 10px 24px rgba(234,88,12,0.22); }
+.step-btn.active.exequibilidade { background:#ca8a04; color:#fff; border-color:#ca8a04; box-shadow:0 10px 24px rgba(202,138,4,0.22); }
+.badge { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem .85rem; border-radius:999px; font-size:.78rem; font-weight:700; letter-spacing:.01em; }
+.info-card { background: rgba(255,255,255,0.88); border-radius: 1rem; padding: 1.1rem; }
+.mini-border-desejabilidade { border-left:4px solid #06b6d4; }
+.mini-border-viabilidade { border-left:4px solid #f97316; }
+.mini-border-exequibilidade { border-left:4px solid #eab308; }
+.tools-box > div { border-radius: 1rem; padding: 1rem; background:white; }
+.section-kicker { display:inline-flex; align-items:center; gap:.5rem; padding:.55rem 1rem; border-radius:999px; font-size:.8rem; font-weight:800; }
+
+.case-shell { background: linear-gradient(135deg, #f8fafc 0%, #ffffff 48%, #f8fafc 100%); border:1px solid #e2e8f0; border-radius:1.5rem; padding:2rem; box-shadow:0 18px 40px rgba(15,23,42,0.08); }
+.case-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:1.5rem; }
+@media (max-width: 900px){ .case-grid { grid-template-columns:1fr; } }
+.case-tab { transition: all .25s ease; }
+.case-tab:hover { transform: translateY(-2px); }
+.case-tab.active-case { background:#0f172a; color:white; border-color:#0f172a; box-shadow:0 12px 28px rgba(15,23,42,0.18); }
+.case-card { border-radius:1rem; padding:1rem 1.1rem; background:white; border:1px solid #e2e8f0; }
+.case-stripe-d { border-left:4px solid #06b6d4; }
+.case-stripe-v { border-left:4px solid #f97316; }
+.case-stripe-e { border-left:4px solid #eab308; }
+
+
+.premium-toolbar { position: sticky; top: 0; z-index: 60; backdrop-filter: blur(14px); background: rgba(248,250,252,0.86); border-bottom: 1px solid rgba(148,163,184,0.18); }
+.toolbar-shell { width:min(1200px,94vw); margin:0 auto; padding: .9rem 0; display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; justify-content:space-between; }
+.toolbar-group { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
+.toolbar-btn { border:1px solid #cbd5e1; background:#fff; color:#0f172a; border-radius:999px; padding:.65rem 1rem; font-size:.85rem; font-weight:700; transition:all .25s ease; }
+.toolbar-btn:hover { transform:translateY(-1px); box-shadow:0 10px 24px rgba(15,23,42,.08); }
+.toolbar-btn.active-filter { color:#fff; }
+.toolbar-btn[data-filter="Obrigatória"].active-filter { background:#be123c; border-color:#be123c; }
+.toolbar-btn[data-filter="Desejável"].active-filter { background:#a16207; border-color:#a16207; }
+.toolbar-btn[data-filter="Dispensável"].active-filter { background:#166534; border-color:#166534; }
+.toolbar-btn[data-role="presentation"].is-on, .toolbar-btn[data-role="focus"].is-on { background:#0f172a; color:#fff; border-color:#0f172a; }
+.pillar-nav { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin: 0 0 2rem; }
+@media (max-width: 900px){ .pillar-nav { grid-template-columns:1fr; } }
+.pillar-jump { border-radius:1.2rem; padding:1rem 1.1rem; border:1px solid #e2e8f0; background:#fff; box-shadow:0 12px 30px rgba(15,23,42,.05); transition:all .28s ease; }
+.pillar-jump:hover { transform:translateY(-2px); }
+.pillar-jump.active-jump { transform:translateY(-3px); box-shadow:0 20px 40px rgba(15,23,42,.10); }
+.pillar-jump.desejabilidade.active-jump { border-color:#06b6d4; }
+.pillar-jump.viabilidade.active-jump { border-color:#f97316; }
+.pillar-jump.exequibilidade.active-jump { border-color:#eab308; }
+.pillar-shell { scroll-margin-top: 7rem; }
+.pillar-shell, .case-shell, .bg-white.rounded-xl, .bg-white.p-8, .bg-slate-900.rounded-2xl { animation: panelFade .5s ease both; }
+@keyframes panelFade { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+.tool-chip { display:inline-flex; align-items:center; gap:.45rem; padding:.3rem .65rem; border-radius:999px; font-size:.72rem; font-weight:800; margin-bottom:.55rem; }
+.tool-chip.obrigatoria { background:#ffe4e6; color:#9f1239; }
+.tool-chip.desejavel { background:#fef3c7; color:#92400e; }
+.tool-chip.dispensavel { background:#dcfce7; color:#166534; }
+.tool-card-box { padding:.9rem 1rem; border-radius:.9rem; background:#fff; }
+.hidden-by-filter { display:none !important; }
+.focus-mode .case-shell, .focus-mode .bg-slate-900.rounded-2xl:last-of-type, .focus-mode .bg-white.p-8.md\:p-12.rounded-2xl.shadow-lg.border.border-slate-100 { display:none; }
+.presentation-mode body, body.presentation-mode { background:#ffffff; }
+body.presentation-mode h1 { font-size: clamp(3rem, 6vw, 4.75rem); }
+body.presentation-mode h2 { font-size: clamp(2rem, 4vw, 3rem); }
+body.presentation-mode p, body.presentation-mode li, body.presentation-mode .quote, body.presentation-mode .lead { font-size: 1.08rem; line-height: 1.85; }
+body.presentation-mode .pillar-shell { padding:2.35rem; }
+body.presentation-mode .info-card, body.presentation-mode .box, body.presentation-mode .case-card, body.presentation-mode .tool-card-box { padding:1.25rem; }
+body.presentation-mode .step-btn { padding:1.1rem; }
+.presentation-highlight { box-shadow:0 0 0 4px rgba(15,23,42,.08), 0 18px 40px rgba(15,23,42,.14); }
+.legend-inline { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+.legend-pill { display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.35rem .7rem; font-size:.75rem; font-weight:800; }
+.legend-pill.ob { background:#ffe4e6; color:#9f1239; }
+.legend-pill.de { background:#fef3c7; color:#92400e; }
+.legend-pill.di { background:#dcfce7; color:#166534; }
+
+</style>
+</head>
+<body class="antialiased selection:bg-cyan-300 selection:text-slate-900">
+<header class="bg-slate-900 text-white py-16 px-6 text-center shadow-xl border-b-8 border-cyan-500">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-cyan-400 text-6xl mb-4">🚀</div>
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">A Trindade da Inovação</h1>
+        <p class="text-lg md:text-2xl font-light text-slate-300 max-w-2xl mx-auto">
+            O equilíbrio perfeito entre o <span class="text-cyan-400 font-semibold">Desejo</span>, a <span class="text-yellow-400 font-semibold">Técnica</span> e o <span class="text-orange-400 font-semibold">Negócio</span> para o sucesso de produtos.
+        </p>
+    </div>
+</header>
+
+<section class="premium-toolbar">
+  <div class="toolbar-shell">
+    <div class="toolbar-group">
+      <span class="text-xs uppercase tracking-[0.18em] font-bold text-slate-500">Modo premium</span>
+      <button class="toolbar-btn" data-role="presentation">Modo apresentação</button>
+      <button class="toolbar-btn" data-role="focus">Modo foco</button>
+    </div>
+    <div class="toolbar-group">
+      <span class="text-xs uppercase tracking-[0.18em] font-bold text-slate-500">Filtrar ferramentas</span>
+      <button class="toolbar-btn active-filter" data-filter="all">Todas</button>
+      <button class="toolbar-btn" data-filter="Obrigatória">Obrigatória</button>
+      <button class="toolbar-btn" data-filter="Desejável">Desejável</button>
+      <button class="toolbar-btn" data-filter="Dispensável">Dispensável</button>
+    </div>
+  </div>
+</section>
+
+<main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
+
+    <section>
+        <div class="text-center mb-8">
+            <div class="text-cyan-700 text-sm font-bold uppercase tracking-[0.18em] mb-3">Navegação estratégica</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Percurso guiado pelos 3 pilares</h2>
+            <p class="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">Use os atalhos para saltar rapidamente entre os pilares. No modo apresentação, esta seção funciona como painel de comando para exposições e pitches.</p>
+        </div>
+        <div class="pillar-nav">
+            <button class="pillar-jump desejabilidade text-left" data-jump="desejabilidade">
+                <div class="text-xs uppercase tracking-wide font-bold text-cyan-700 mb-2">Desejabilidade</div>
+                <div class="font-bold text-slate-800 mb-1">Da dor observada ao comportamento validado</div>
+                <div class="text-sm text-slate-600">Ver, estruturar, compreender, testar interesse e exigir uso.</div>
+            </button>
+            <button class="pillar-jump viabilidade text-left" data-jump="viabilidade">
+                <div class="text-xs uppercase tracking-wide font-bold text-orange-700 mb-2">Viabilidade</div>
+                <div class="font-bold text-slate-800 mb-1">Do valor percebido ao motor econômico</div>
+                <div class="text-sm text-slate-600">Modelar mercado, competição, escala, custos e sustentação.</div>
+            </button>
+            <button class="pillar-jump exequibilidade text-left" data-jump="exequibilidade">
+                <div class="text-xs uppercase tracking-wide font-bold text-yellow-700 mb-2">Exequibilidade</div>
+                <div class="font-bold text-slate-800 mb-1">Da solução pensada ao sistema controlável</div>
+                <div class="text-sm text-slate-600">Traduzir, representar, construir, organizar e evoluir.</div>
+            </button>
+        </div>
+    </section>
+    <section class="text-center">
+        <h2 class="text-3xl font-bold text-slate-800 mb-6">O Epicentro do Sucesso</h2>
+        <p class="text-slate-600 max-w-3xl mx-auto mb-20 text-lg leading-relaxed">
+            A verdadeira inovação exige uma intersecção exata. Abaixo, o diagrama mostra onde os pilares se encontram. As perguntas de validação ajudam a localizar o projeto fora da zona de conforto e a enxergar onde o risco está concentrado.
+        </p>
+        <div class="venn-container">
+            <div class="venn-wrapper">
+                <div class="venn-circle circle-desejavel">Desejável</div>
+                <div class="venn-circle circle-viavel">Viável</div>
+                <div class="venn-circle circle-exequivel">Exequível</div>
+                <div class="venn-question q-desejavel">As pessoas realmente querem isso?</div>
+                <div class="venn-question q-viavel">Este modelo gera retorno e sustentação?</div>
+                <div class="venn-question q-exequivel">Temos técnica e método para construir?</div>
+                <div class="venn-center">INOVAÇÃO<br>SUSTENTÁVEL</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">A Jornada de Validação</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">Um roteiro estruturado de ferramentas essenciais para cada etapa da construção do projeto, da dor real à sustentabilidade do modelo.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-xl shadow-md border-t-4 border-cyan-500 p-6 flex flex-col h-full transform transition hover:-translate-y-1">
+                <div class="text-4xl mb-4 text-cyan-500">❤️</div>
+                <h3 class="text-xl font-bold mb-2">1. Desejabilidade</h3>
+                <p class="text-slate-500 text-sm mb-6 flex-grow">Validar dor, comportamento, interesse e sinais iniciais de valor percebido.</p>
+                <ul class="space-y-3 text-sm font-medium text-slate-700">
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> Observação direta</li>
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> Entrevistas com usuários</li>
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> JTBD</li>
+                    <li class="flex items-center"><span class="mr-2 text-cyan-500">►</span> Protótipo simples</li>
+                </ul>
+            </div>
+            <div class="bg-white rounded-xl shadow-md border-t-4 border-orange-500 p-6 flex flex-col h-full transform transition hover:-translate-y-1">
+                <div class="text-4xl mb-4 text-orange-500">📊</div>
+                <h3 class="text-xl font-bold mb-2">2. Viabilidade</h3>
+                <p class="text-slate-500 text-sm mb-6 flex-grow">Validar se a solução consegue permanecer viva, crescer e suportar seus próprios custos.</p>
+                <ul class="space-y-3 text-sm font-medium text-slate-700">
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Lean Canvas</li>
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Matriz de Competidores</li>
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> TAM, SAM, SOM</li>
+                    <li class="flex items-center"><span class="mr-2 text-orange-500">►</span> Unit Economics</li>
+                </ul>
+            </div>
+            <div class="bg-white rounded-xl shadow-md border-t-4 border-yellow-500 p-6 flex flex-col h-full transform transition hover:-translate-y-1">
+                <div class="text-4xl mb-4 text-yellow-500">⚙️</div>
+                <h3 class="text-xl font-bold mb-2">3. Exequibilidade</h3>
+                <p class="text-slate-500 text-sm mb-6 flex-grow">Transformar a ideia em sistema funcional, controlável e evolutivo.</p>
+                <ul class="space-y-3 text-sm font-medium text-slate-700">
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> PRD</li>
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> Prototipação</li>
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> Construção inicial</li>
+                    <li class="flex items-center"><span class="mr-2 text-yellow-500">►</span> Backlog e métricas</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="case-shell">
+        <div class="text-center mb-10">
+            <div class="section-kicker bg-slate-100 text-slate-700 mb-4">🧭 Caso longitudinal integrado, a mesma ideia atravessando os 3 pilares</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">Da dor clínica ao produto sustentável</h2>
+            <p class="text-slate-600 max-w-4xl mx-auto text-lg leading-relaxed">Nesta leitura transversal, a mesma solução é acompanhada do início ao fim. O caso parte da dificuldade de médicos generalistas em uma UPA para reduzir rapidamente a incerteza diagnóstica diante de dor ou edema agudo em membro inferior. O objetivo é mostrar como a mesma ideia se transforma quando passa pelos filtros da desejabilidade, da viabilidade e da exequibilidade.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8" id="caseTabs"></div>
+        <div class="case-grid">
+            <article class="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-slate-200">
+                <div class="flex flex-wrap gap-3 items-center mb-4">
+                    <span id="casePillarBadge" class="badge bg-slate-100 text-slate-700"></span>
+                    <span id="casePhaseBadge" class="badge bg-slate-100 text-slate-700"></span>
+                </div>
+                <h3 id="caseTitle" class="text-2xl md:text-3xl font-bold text-slate-800 mb-3"></h3>
+                <p id="caseLead" class="text-slate-600 leading-relaxed text-lg mb-6"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="case-card"><h4 class="font-bold text-slate-800 mb-2">Situação do caso</h4><p id="caseSituation" class="text-slate-600 leading-relaxed"></p></div>
+                    <div class="case-card"><h4 class="font-bold text-slate-800 mb-2">Pergunta dominante</h4><p id="caseQuestion" class="text-slate-600 leading-relaxed"></p></div>
+                    <div class="case-card"><h4 class="font-bold text-slate-800 mb-2">Decisão estratégica</h4><p id="caseDecision" class="text-slate-600 leading-relaxed"></p></div>
+                    <div class="case-card"><h4 class="font-bold text-slate-800 mb-2">Risco evitado</h4><p id="caseRisk" class="text-slate-600 leading-relaxed"></p></div>
+                </div>
+                <div class="case-card">
+                    <h4 class="font-bold text-slate-800 mb-2">Evolução da solução</h4>
+                    <p id="caseEvolution" class="text-slate-700 leading-relaxed"></p>
+                </div>
+            </article>
+            <aside class="space-y-4">
+                <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-3">Leitura integrada</h3>
+                    <p id="caseExecutive" class="text-slate-300 leading-relaxed"></p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Marcos do mesmo projeto</h3>
+                    <div id="caseMilestones" class="space-y-3"></div>
+                </div>
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Frase de travessia</h3>
+                    <p id="caseAnchor" class="text-slate-700 leading-relaxed font-medium"></p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+
+    <section id="desejabilidade" class="pillar-shell desejabilidade">
+        <div class="text-center mb-10">
+            <div class="section-kicker bg-cyan-100 text-cyan-700 mb-4">💙 Pilar da Desejabilidade, Fluxo Visual Integrado</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">Esteira da Desejabilidade</h2>
+            <p class="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">A desejabilidade organiza a passagem da dor observada ao comportamento que confirma valor. O centro não é a opinião sobre a ideia, mas a redução progressiva da incerteza sobre o problema e o uso real.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-8" id="desejabilidadeSteps"></div>
+        <div class="pillar-grid">
+            <article class="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-cyan-100">
+                <div class="flex flex-wrap gap-3 items-center mb-4">
+                    <span id="desejabilidadePhaseBadge" class="badge bg-cyan-100 text-cyan-700"></span>
+                    <span id="desejabilidadeClassBadge" class="badge bg-slate-100 text-slate-700"></span>
+                </div>
+                <h3 id="desejabilidadeTitle" class="text-2xl md:text-3xl font-bold text-slate-800 mb-3"></h3>
+                <p id="desejabilidadeLead" class="text-slate-600 leading-relaxed text-lg mb-6"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="info-card border border-cyan-100"><h4 class="font-bold text-slate-800 mb-2">Pergunta central</h4><p id="desejabilidadeQuestion" class="text-slate-600 leading-relaxed"></p></div>
+                    <div class="info-card border border-cyan-100"><h4 class="font-bold text-slate-800 mb-2">Objetivo da fase</h4><p id="desejabilidadeObjective" class="text-slate-600 leading-relaxed"></p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="info-card mini-border-desejabilidade border border-cyan-100"><h4 class="font-bold text-slate-800 mb-2">Ferramenta principal</h4><p id="desejabilidadeMainTool" class="text-slate-700 font-semibold mb-2"></p><p id="desejabilidadeMainToolDesc" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card mini-border-desejabilidade border border-cyan-100"><h4 class="font-bold text-slate-800 mb-2">Aprendizagem estratégica</h4><p id="desejabilidadeLearning" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card border border-cyan-100"><h4 class="font-bold text-slate-800 mb-2">Erro clássico</h4><p id="desejabilidadeMistake" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card border border-cyan-100"><h4 class="font-bold text-slate-800 mb-2">Risco reduzido</h4><p id="desejabilidadeRisk" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                </div>
+            </article>
+            <aside class="space-y-4">
+                <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-3">Leitura executiva do fluxo</h3>
+                    <p class="text-slate-300 leading-relaxed mb-4">A sequência começa com a realidade do problema, organiza a dor, modela o comportamento, testa interesse e termina quando o usuário demonstra valor pelo uso, não apenas pela fala.</p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-cyan-400">●</span><p class="text-slate-200"><strong>Fase 1</strong>, ver a dor acontecendo.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-cyan-400">●</span><p class="text-slate-200"><strong>Fase 2</strong>, escolher o problema que importa.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-cyan-400">●</span><p class="text-slate-200"><strong>Fase 3</strong>, entender o trabalho real do usuário.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-cyan-400">●</span><p class="text-slate-200"><strong>Fase 4</strong>, expor a proposta ao usuário.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-cyan-400">●</span><p class="text-slate-200"><strong>Fase 5</strong>, exigir comportamento observável.</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-cyan-100">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Ferramentas do pilar</h3>
+                    <div id="desejabilidadeToolsList" class="tools-box space-y-3"></div>
+                </div>
+                <div class="bg-cyan-50 rounded-2xl p-6 border border-cyan-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Frase âncora</h3>
+                    <p id="desejabilidadeAnchor" class="text-slate-700 leading-relaxed font-medium"></p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <section id="viabilidade" class="pillar-shell viabilidade">
+        <div class="text-center mb-10">
+            <div class="section-kicker bg-orange-100 text-orange-700 mb-4">📈 Pilar da Viabilidade, Fluxo Visual Integrado</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">Esteira Estratégica da Viabilidade</h2>
+            <p class="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">Aqui a solução deixa de ser apenas promissora e passa a ser examinada como sistema capaz de sobreviver. O foco é sair da retórica do negócio e entrar na lógica da sustentação.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-8" id="viabilidadeSteps"></div>
+        <div class="pillar-grid">
+            <article class="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-orange-100">
+                <div class="flex flex-wrap gap-3 items-center mb-4">
+                    <span id="viabilidadePhaseBadge" class="badge bg-orange-100 text-orange-700"></span>
+                    <span id="viabilidadeClassBadge" class="badge bg-slate-100 text-slate-700"></span>
+                </div>
+                <h3 id="viabilidadeTitle" class="text-2xl md:text-3xl font-bold text-slate-800 mb-3"></h3>
+                <p id="viabilidadeLead" class="text-slate-600 leading-relaxed text-lg mb-6"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="info-card border border-orange-100"><h4 class="font-bold text-slate-800 mb-2">Pergunta central</h4><p id="viabilidadeQuestion" class="text-slate-600 leading-relaxed"></p></div>
+                    <div class="info-card border border-orange-100"><h4 class="font-bold text-slate-800 mb-2">Objetivo da fase</h4><p id="viabilidadeObjective" class="text-slate-600 leading-relaxed"></p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="info-card mini-border-viabilidade border border-orange-100"><h4 class="font-bold text-slate-800 mb-2">Ferramenta principal</h4><p id="viabilidadeMainTool" class="text-slate-700 font-semibold mb-2"></p><p id="viabilidadeMainToolDesc" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card mini-border-viabilidade border border-orange-100"><h4 class="font-bold text-slate-800 mb-2">Aprendizagem estratégica</h4><p id="viabilidadeLearning" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card border border-orange-100"><h4 class="font-bold text-slate-800 mb-2">Erro clássico</h4><p id="viabilidadeMistake" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card border border-orange-100"><h4 class="font-bold text-slate-800 mb-2">Risco reduzido</h4><p id="viabilidadeRisk" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                </div>
+            </article>
+            <aside class="space-y-4">
+                <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-3">Leitura executiva do fluxo</h3>
+                    <p class="text-slate-300 leading-relaxed mb-4">A viabilidade começa com a lógica enxuta do modelo, confronta a competição, dimensiona a oportunidade, estrutura o sistema econômico e termina na matemática unitária da sobrevivência.</p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-orange-400">●</span><p class="text-slate-200"><strong>Fase 1</strong>, dar forma inicial ao negócio.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-orange-400">●</span><p class="text-slate-200"><strong>Fase 2</strong>, evitar ingenuidade competitiva.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-orange-400">●</span><p class="text-slate-200"><strong>Fase 3</strong>, medir a escala da oportunidade.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-orange-400">●</span><p class="text-slate-200"><strong>Fase 4</strong>, montar a arquitetura do negócio.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-orange-400">●</span><p class="text-slate-200"><strong>Fase 5</strong>, testar a unidade econômica.</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-orange-100">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Ferramentas do pilar</h3>
+                    <div id="viabilidadeToolsList" class="tools-box space-y-3"></div>
+                </div>
+                <div class="bg-orange-50 rounded-2xl p-6 border border-orange-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Frase âncora</h3>
+                    <p id="viabilidadeAnchor" class="text-slate-700 leading-relaxed font-medium"></p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <section id="exequibilidade" class="pillar-shell exequibilidade">
+        <div class="text-center mb-10">
+            <div class="section-kicker bg-yellow-100 text-yellow-700 mb-4">⚙️ Pilar da Exequibilidade, Fluxo Visual Integrado</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">Esteira da Exequibilidade</h2>
+            <p class="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">A exequibilidade organiza a passagem da ideia para o sistema funcional. O foco não é apenas construir, mas construir com clareza, controle e capacidade de evolução.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-8" id="exequibilidadeSteps"></div>
+        <div class="pillar-grid">
+            <article class="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-yellow-100">
+                <div class="flex flex-wrap gap-3 items-center mb-4">
+                    <span id="exequibilidadePhaseBadge" class="badge bg-yellow-100 text-yellow-700"></span>
+                    <span id="exequibilidadeClassBadge" class="badge bg-slate-100 text-slate-700"></span>
+                </div>
+                <h3 id="exequibilidadeTitle" class="text-2xl md:text-3xl font-bold text-slate-800 mb-3"></h3>
+                <p id="exequibilidadeLead" class="text-slate-600 leading-relaxed text-lg mb-6"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="info-card border border-yellow-100"><h4 class="font-bold text-slate-800 mb-2">Pergunta central</h4><p id="exequibilidadeQuestion" class="text-slate-600 leading-relaxed"></p></div>
+                    <div class="info-card border border-yellow-100"><h4 class="font-bold text-slate-800 mb-2">Objetivo da fase</h4><p id="exequibilidadeObjective" class="text-slate-600 leading-relaxed"></p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="info-card mini-border-exequibilidade border border-yellow-100"><h4 class="font-bold text-slate-800 mb-2">Ferramenta principal</h4><p id="exequibilidadeMainTool" class="text-slate-700 font-semibold mb-2"></p><p id="exequibilidadeMainToolDesc" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card mini-border-exequibilidade border border-yellow-100"><h4 class="font-bold text-slate-800 mb-2">Aprendizagem estratégica</h4><p id="exequibilidadeLearning" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card border border-yellow-100"><h4 class="font-bold text-slate-800 mb-2">Erro clássico</h4><p id="exequibilidadeMistake" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                    <div class="info-card border border-yellow-100"><h4 class="font-bold text-slate-800 mb-2">Risco reduzido</h4><p id="exequibilidadeRisk" class="text-slate-600 leading-relaxed text-sm"></p></div>
+                </div>
+            </article>
+            <aside class="space-y-4">
+                <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-3">Leitura executiva do fluxo</h3>
+                    <p class="text-slate-300 leading-relaxed mb-4">A exequibilidade começa definindo o que precisa ser construído, torna isso visível, materializa a primeira versão funcional, organiza tecnicamente o sistema e cria a base da evolução contínua.</p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-yellow-400">●</span><p class="text-slate-200"><strong>Fase 1</strong>, eliminar ambiguidade antes da execução.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-yellow-400">●</span><p class="text-slate-200"><strong>Fase 2</strong>, ver antes de construir.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-yellow-400">●</span><p class="text-slate-200"><strong>Fase 3</strong>, gerar sistema funcional mínimo.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-yellow-400">●</span><p class="text-slate-200"><strong>Fase 4</strong>, introduzir controle e estabilidade.</p></div>
+                        <div class="flex gap-3 items-start"><span class="mt-1 text-yellow-400">●</span><p class="text-slate-200"><strong>Fase 5</strong>, evoluir com direção e prioridade.</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-lg border border-yellow-100">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Ferramentas do pilar</h3>
+                    <div id="exequibilidadeToolsList" class="tools-box space-y-3"></div>
+                </div>
+                <div class="bg-yellow-50 rounded-2xl p-6 border border-yellow-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Frase âncora</h3>
+                    <p id="exequibilidadeAnchor" class="text-slate-700 leading-relaxed font-medium"></p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <section class="bg-white p-8 md:p-12 rounded-2xl shadow-lg border border-slate-100">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">Os Riscos do Desequilíbrio</h2>
+                <p class="text-slate-600 mb-6 leading-relaxed">A tendência natural das equipes é concentrar energia no pilar em que possuem mais domínio. O problema é que toda hipertrofia de um pilar gera fragilidade estrutural nos outros dois.</p>
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-cyan-500"><h4 class="font-bold text-slate-800">Projeto de Vaidade</h4><p class="text-sm text-slate-600">Alta desejabilidade e alta exequibilidade, mas baixa viabilidade. O produto encanta e funciona, porém não se sustenta.</p></div>
+                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-orange-500"><h4 class="font-bold text-slate-800">Produto Empurrado</h4><p class="text-sm text-slate-600">Alta viabilidade e alta exequibilidade, mas baixa desejabilidade. O sistema existe e pode gerar retorno, porém o mercado não deseja usá-lo.</p></div>
+                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-yellow-500"><h4 class="font-bold text-slate-800">A Alucinação</h4><p class="text-sm text-slate-600">Alta desejabilidade e alta viabilidade, mas baixa exequibilidade. A ideia parece forte e o mercado parece responder, mas a equipe não consegue construir com solidez.</p></div>
+                </div>
+            </div>
+            <div class="w-full flex justify-center"><div class="chart-container"><canvas id="risksChart"></canvas></div></div>
+        </div>
+    </section>
+
+    <section class="bg-slate-900 rounded-2xl p-8 md:p-12 text-white shadow-2xl">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-white mb-4">Estratégias de Pitch</h2>
+            <p class="text-slate-300 max-w-2xl mx-auto leading-relaxed">Adapte a comunicação do projeto conforme o tempo disponível. O foco deve transitar entre os pilares dependendo do cenário de apresentação.</p>
+        </div>
+        <div class="chart-container mb-8"><canvas id="pitchChart"></canvas></div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]"><div class="font-bold text-white text-xl mb-1">1 Minuto</div><div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Elevator Pitch</div><div class="text-xs text-slate-300">Foco dominante na dor e na proposta única.</div></div>
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]"><div class="font-bold text-white text-xl mb-1">3 Minutos</div><div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Rocket Pitch</div><div class="text-xs text-slate-300">Entram sinais de solução e plausibilidade técnica.</div></div>
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]"><div class="font-bold text-white text-xl mb-1">5 Minutos</div><div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Standard Pitch</div><div class="text-xs text-slate-300">Equilíbrio explícito entre desejo, técnica e negócio.</div></div>
+            <div class="p-4 bg-slate-800 rounded-lg flex flex-col justify-center min-h-[160px]"><div class="font-bold text-white text-xl mb-1">7 Minutos</div><div class="font-bold text-cyan-400 text-sm uppercase tracking-wide mb-2">Deep Dive Pitch</div><div class="text-xs text-slate-300">Detalhamento de viabilidade, operação e escala.</div></div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-slate-100 py-12 border-t border-slate-200 mt-12 text-center text-slate-500 text-sm">
+    <div class="max-w-2xl mx-auto px-4">
+        <p class="mb-4 text-slate-600 font-medium">Não tenha medo de pivotar. O fracasso no papel custa menos do que o fracasso depois da construção.</p>
+        <p class="font-semibold text-slate-400 uppercase tracking-widest text-xs">A Trindade da Inovação © 2026</p>
+    </div>
+</footer>
+
+<script>
+const pillarData = {
+  desejabilidade: [
+    {phase:'Fase 1', title:'Realidade do Problema', classification:'Obrigatória', short:'Ver a dor acontecendo.', lead:'A equipe sai do campo da opinião e entra no território da observação. Nesta fase, a dor precisa ser vista em contexto real, com pressão, interrupção e consequência concreta.', question:'Isso realmente acontece, com que frequência e em que contexto?', objective:'Identificar problemas reais, concretos e repetidos a partir do comportamento observado e da experiência vivida pelo usuário.', tool:'Observação direta', toolDesc:'Acompanhar o ambiente e registrar fatos, fricções, decisões e padrões sem intervir precocemente.', learning:'O maior ganho é perceber que parte importante da dor não aparece espontaneamente no discurso do usuário. Ela precisa ser observada.', mistake:'Apaixonar-se cedo demais pela própria interpretação e transformar impressão em problema validado.', risk:'Reduz o risco de construir solução para dor imaginada, rara ou mal descrita.', anchor:'Sem ver a dor acontecendo, a desejabilidade permanece excessivamente dependente de suposição.', tools:[['Observação direta','Torna visíveis atrasos, interrupções e improvisos do fluxo real.'],['Entrevistas com usuários','Acessam significado, medo, prioridade e tensão subjetiva.'],['Shadowing','Aprofunda a compreensão da rotina distribuída ao longo do tempo.']]},
+    {phase:'Fase 2', title:'Estruturação do Problema', classification:'Obrigatória', short:'Escolher a dor que importa.', lead:'Depois de observar e ouvir, a equipe precisa transformar dados dispersos em alvo operacional. O foco deixa de ser “há muitos problemas” e passa a ser “qual problema merece prioridade agora”.', question:'Entre tudo o que apareceu, qual dor merece foco estratégico imediato?', objective:'Transformar dados dispersos em formulação clara, específica, priorizada e acionável do problema.', tool:'Problem Statement', toolDesc:'Formulação sintética que explicita usuário, situação, dor concreta e impacto produzido.', learning:'O projeto ganha foco quando deixa de falar sobre o tema amplo e passa a descrever a dor prioritária com precisão.', mistake:'Querer preservar todos os problemas ao mesmo tempo e destruir a nitidez da proposta.', risk:'Reduz o risco de avançar com um projeto sedutor no discurso, porém difuso na prática.', anchor:'Problema amplo convence. Problema bem delimitado orienta construção e validação.', tools:[['Lista de dores recorrentes','Agrupa padrões e separa causa de efeito.'],['Problem statement','Define o alvo operacional do projeto.'],['Segmentação de clientes','Escolhe quem sofre a dor principal e em quem validar primeiro.']]},
+    {phase:'Fase 3', title:'Modelagem do Comportamento', classification:'Obrigatória', short:'Entender como o usuário decide.', lead:'A equipe já sabe qual dor quer resolver, mas ainda precisa compreender o trabalho real que o usuário tenta executar. Nesta fase, o centro passa a ser comportamento orientado a progresso.', question:'Como o usuário realmente decide, reage e tenta progredir diante dessa dor?', objective:'Mapear como o usuário pensa, decide, sente, age e busca resolver o problema no contexto em que ele ocorre.', tool:'JTBD', toolDesc:'Estrutura que liga situação concreta, ação desejada e resultado esperado pelo usuário.', learning:'O projeto melhora quando deixa de girar em torno do perfil do usuário e passa a girar em torno do trabalho que ele precisa realizar.', mistake:'Confundir descrição do usuário com compreensão do comportamento.', risk:'Reduz o risco de criar solução teoricamente correta e praticamente incompatível com o fluxo real.', anchor:'Boa solução é a que cabe no comportamento real do usuário, não apenas na lógica da equipe.', tools:[['JTBD','Traduz a dor em progresso desejado.'],['Mapa de empatia','Expõe tensões emocionais, sociais e ambientais.'],['Persona','Sintetiza o usuário prioritário sem caricatura.']]},
+    {phase:'Fase 4', title:'Teste de Interesse', classification:'Obrigatória', short:'Expor a proposta ao usuário.', lead:'Chega o momento de colocar a solução em contato com o usuário. O objetivo ainda não é provar adoção consolidada, mas verificar se a proposta é compreendida, relevante e tangível.', question:'A solução proposta desperta interesse concreto ou apenas curiosidade passageira?', objective:'Verificar se a solução desperta interesse inicial claro e se o usuário reconhece potencial de valor.', tool:'Protótipo simples', toolDesc:'Representação mínima da solução, suficiente para tornar a proposta visível e criticável.', learning:'Quando a solução se torna tangível, a equipe aprende mais rápido o que o usuário rejeita, simplifica ou valoriza.', mistake:'Confundir elogio genérico com validação real de valor.', risk:'Reduz o risco de desenvolver excessivamente uma proposta mal comunicada ou pouco atraente.', anchor:'Interesse verbal ajuda, mas tangibilidade acelera aprendizado e expõe fricções reais.', tools:[['Teste de conceito','Apresenta a ideia em linguagem simples e focada no contexto de uso.'],['Protótipo simples','Torna a proposta concreta para observação crítica.'],['Landing page','Amplia sinais de interesse fora do círculo imediato.']]},
+    {phase:'Fase 5', title:'Validação Comportamental', classification:'Obrigatória', short:'Exigir uso e não apenas fala.', lead:'A fase final desloca o eixo da opinião para o comportamento. A desejabilidade só se fortalece quando o usuário age como alguém que realmente percebe valor.', question:'O comportamento do usuário confirma valor percebido real?', objective:'Confirmar valor por meio de comportamento observável, uso efetivo e sinais concretos de aderência.', tool:'Teste de uso real', toolDesc:'Situação em que o usuário interage com a solução em cenário simulado ou real, permitindo observar entendimento, hesitação e abandono.', learning:'Uso observado é evidência mais forte do que simpatia intelectual pela ideia.', mistake:'Encerrar a validação porque alguns usuários elogiaram o conceito ou o protótipo.', risk:'Reduz o risco de declarar desejabilidade validada sem comportamento compatível com valor real.', anchor:'Na etapa final da desejabilidade, fala positiva não basta. O critério é comportamento observável.', tools:[['Teste de uso real','Mostra se a solução se encaixa no modo de operar do usuário.'],['Feedback estruturado','Transforma percepção em aprendizado comparável.'],['Métricas simples','Quantificam conclusão, retorno e sinais básicos de valor.']]}],
+  viabilidade: [
+    {phase:'Fase 1', title:'Lean Canvas', classification:'Obrigatória', short:'Dar forma inicial ao modelo.', lead:'A equipe precisa condensar o negócio em uma estrutura enxuta, explícita e criticável. Nesta fase, a solução deixa de ser apenas uma boa ideia e passa a ter problema, cliente, proposta de valor, canais, custos e receita minimamente identificados.', question:'Existe um modelo inicial coerente entre problema, cliente, solução e captura de valor?', objective:'Estruturar a lógica central do negócio de forma rápida, enxuta e revisável.', tool:'Lean Canvas', toolDesc:'Quadro de síntese que obriga a equipe a tornar visíveis as hipóteses fundamentais do modelo.', learning:'O principal ganho não é preencher um quadro. É descobrir quais partes do modelo ainda são vagas, frágeis ou fantasiosas.', mistake:'Usar o canvas como peça de apresentação bonita, sem revisá-lo à luz do aprendizado real.', risk:'Reduz o risco de avançar com uma solução economicamente difusa e sem arquitetura mínima de negócio.', anchor:'Se a lógica central não cabe com clareza em um canvas, o negócio ainda não foi suficientemente entendido.', tools:[['Problema','Definir a dor econômica e não apenas a dor clínica ou operacional.'],['Segmento de cliente','Escolher quem realmente sofre a dor e pode aderir ou pagar.'],['Receita e custos','Introduzir desde cedo a pergunta da sustentação.']]},
+    {phase:'Fase 2', title:'Matriz de Competidores', classification:'Obrigatória', short:'Confrontar a realidade de mercado.', lead:'Nenhuma equipe deveria formular viabilidade presumindo vazio competitivo. Nesta fase, o projeto precisa ser comparado com quem já resolve o problema, mesmo que de forma incompleta, manual ou indireta.', question:'Quem já resolve esse problema hoje, e por que o mercado ainda aceitaria outra solução?', objective:'Mapear concorrentes diretos, indiretos e substitutos funcionais.', tool:'Matriz de Competidores', toolDesc:'Comparação estruturada entre proposta de valor, limitações existentes e espaços reais de diferenciação.', learning:'O mercado não compete apenas com softwares parecidos. Ele compete com protocolos, hábitos, improvisos e soluções imperfeitas já aceitas.', mistake:'Acreditar que não há concorrência só porque não existe produto idêntico ao seu.', risk:'Reduz o risco de criar uma solução irrelevante ou fracamente diferenciada.', anchor:'O maior concorrente de uma inovação nem sempre é outro aplicativo. Muitas vezes, é o hábito já consolidado do usuário.', tools:[['Concorrentes diretos','Quem vende proposta semelhante para o mesmo problema.'],['Concorrentes indiretos','Quem resolve a dor por outro caminho.'],['Lacunas exploráveis','Onde a sua solução pode ser objetivamente superior.']]},
+    {phase:'Fase 3', title:'Análise TAM, SAM, SOM', classification:'Obrigatória', short:'Dimensionar a oportunidade real.', lead:'Depois de reconhecer que o mercado existe e já possui respostas parciais, a equipe precisa medir tamanho, acesso e capturabilidade. O objetivo não é inflar números. É impedir que energia estratégica seja investida em mercados pequenos, inacessíveis ou ilusórios.', question:'O mercado é grande o suficiente, acessível o suficiente e capturável o suficiente para justificar o esforço?', objective:'Dimensionar a escala da oportunidade de forma progressivamente realista.', tool:'TAM, SAM, SOM', toolDesc:'Modelo que separa mercado total, mercado acessível e mercado capturável.', learning:'Mercado grande não significa mercado útil. O que importa é a parte realmente acessível ao modelo inicial.', mistake:'Confundir potencial teórico com espaço real de entrada.', risk:'Reduz o risco de orientar o negócio por números impressionantes, porém operacionalmente vazios.', anchor:'Tamanho de mercado sem acesso real é apenas retórica de pitch.', tools:[['TAM','Mostra o teto teórico da oportunidade.'],['SAM','Mostra o pedaço do mercado onde a solução pode atuar.'],['SOM','Mostra o quanto pode ser capturado de modo plausível no início.']]},
+    {phase:'Fase 4', title:'Business Model Canvas', classification:'Desejável', short:'Montar a arquitetura do negócio.', lead:'Com maior clareza sobre problema, competição e mercado, torna-se útil aprofundar o sistema econômico que sustenta a proposta. Nesta fase, a equipe deixa de olhar apenas a lógica central e passa a organizar canais, recursos, atividades, parcerias e estrutura de custos de forma integrada.', question:'Como o negócio opera como sistema, e não apenas como promessa de valor?', objective:'Organizar o funcionamento completo do modelo de negócio.', tool:'Business Model Canvas', toolDesc:'Quadro amplo que descreve geração, entrega e captura de valor em nove blocos articulados.', learning:'Aqui a equipe percebe que um produto não se sustenta apenas com proposta de valor. Ele depende de infraestrutura operacional e econômica.', mistake:'Usar o BMC cedo demais, com hipóteses ainda nebulosas, gerando complexidade prematura.', risk:'Reduz o risco de um modelo atraente em discurso, mas incoerente em operação.', anchor:'Uma boa proposta de valor não basta quando canais, custos e parcerias não fecham entre si.', tools:[['Canais','Como a solução chega ao usuário de forma real.'],['Parcerias-chave','Quem viabiliza a entrega e a escala.'],['Estrutura de custos','Onde o modelo consome energia financeira.']]},
+    {phase:'Fase 5', title:'Unit Economics', classification:'Obrigatória', short:'Testar a unidade financeira.', lead:'Esta é a fase mais dura e mais honesta do pilar da viabilidade. Agora a discussão sai do nível narrativo e entra na matemática da sobrevivência. O foco deixa de ser o negócio em abstrato e passa a ser a unidade básica, cada cliente, cada uso, cada aquisição, cada manutenção.', question:'Cada usuário gera valor líquido ou acelera o prejuízo do sistema?', objective:'Calcular a relação entre custo de aquisição, custo de manutenção e valor gerado por unidade.', tool:'Unit Economics', toolDesc:'Planilhas e simulações que medem CAC, LTV, margem unitária e tempo de retorno.', learning:'Crescer não corrige prejuízo estrutural. Crescer, quando a unidade é negativa, amplia o problema.', mistake:'Presumir que lucro virá no futuro sem demonstrar que a unidade básica tem caminho plausível para fechar positivamente.', risk:'Reduz o risco de construir um negócio que parece promissor, mas se torna mais frágil a cada novo usuário.', anchor:'Quando a unidade econômica é negativa, o crescimento não salva. O crescimento acelera a falha.', tools:[['CAC','Quanto custa adquirir um usuário ou cliente.'],['LTV','Quanto valor esse cliente gera ao longo do tempo.'],['Margem unitária','Se a unidade fortalece ou enfraquece o sistema.']]}],
+  exequibilidade: [
+    {phase:'Fase 1', title:'Tradução da Solução', classification:'Obrigatória', short:'Eliminar ambiguidade antes da execução.', lead:'A ideia deixa de ser intenção geral e passa a ser convertida em estrutura operacional. O foco não está em programar, mas em responder com precisão o que exatamente precisa ser construído, para quem, em que contexto e com quais regras.', question:'O que exatamente deve ser construído?', objective:'Transformar o problema validado em definição técnica clara, estruturada e acionável.', tool:'PRD', toolDesc:'Documento que organiza problema, usuário, objetivo, funcionalidades, fluxo, regras e critérios de sucesso.', learning:'Ao tentar descrever a solução com precisão, a equipe descobre onde ainda existe ambiguidade conceitual.', mistake:'Começar a construir antes de saber com exatidão o que está sendo construído.', risk:'Reduz o risco de gerar sistema mal definido, amplo demais ou incoerente com o problema central.', anchor:'Quando a especificação é frágil, a tecnologia apenas acelera a confusão.', tools:[['PRD','Converte a ideia em requisitos operacionais.'],['MVP','Define o núcleo mínimo de valor a ser construído.'],['User flow','Organiza a sequência lógica de uso antes da interface.']]},
+    {phase:'Fase 2', title:'Representação da Solução', classification:'Obrigatória', short:'Ver antes de construir.', lead:'A solução deixa o plano puramente conceitual e passa a existir como representação visual e navegável. O objetivo não é estética, mas coerência de uso antes do desenvolvimento.', question:'Se o usuário interagir com essa solução, o caminho será claro e coerente?', objective:'Transformar a estrutura lógica em representação visual e navegável, capaz de ser criticada antes da construção.', tool:'Prototipação de telas', toolDesc:'Representação visual da interface e do fluxo, suficiente para revelar excesso, redundância e confusão.', learning:'O que parecia coerente em texto frequentemente revela fricção quando vira tela, navegação e sequência de decisão.', mistake:'Confundir representação com design refinado e gastar energia com aparência antes da lógica.', risk:'Reduz o risco de investir em desenvolvimento de uma experiência confusa ou incoerente.', anchor:'Alterar no protótipo custa pouco. Alterar depois da construção custa tempo, energia e foco.', tools:[['Protótipos de telas','Traduzem fluxo em experiência visual.'],['Arquitetura de navegação','Mostra como as telas se conectam.'],['Simulação de uso','Percorre o sistema como se fosse o usuário.']]},
+    {phase:'Fase 3', title:'Construção Inicial', classification:'Obrigatória', short:'Gerar sistema funcional mínimo.', lead:'A construção inicial marca a passagem do modelo para o sistema. O objetivo não é perfeição técnica, mas uma versão funcional mínima, capaz de executar o fluxo principal e permitir teste real.', question:'Isso funciona na prática, ainda que de forma imperfeita?', objective:'Transformar a solução representada em sistema funcional mínimo e testável.', tool:'Construtores assistidos por IA', toolDesc:'Plataformas e IA de código aceleram a primeira versão, desde que a equipe valide o comportamento gerado.', learning:'Hoje é possível construir rápido. O desafio real é construir algo compreensível, controlável e logicamente correto.', mistake:'Confundir velocidade de construção com qualidade da solução ou aceitar código funcional como código certo.', risk:'Reduz o risco de permanecer no plano abstrato ou gerar sistema que funciona sem estar correto.', anchor:'Funcionar não significa estar certo. A validação continua indispensável depois da geração do sistema.', tools:[['Lovable ou equivalente','Acelera a materialização da primeira versão.'],['IA para geração de código','Age como copiloto, não como critério de verdade.'],['Integração mínima','Garante conexão entre entrada, lógica e saída.']]},
+    {phase:'Fase 4', title:'Organização Técnica', classification:'Obrigatória', short:'Criar controle e estabilidade.', lead:'Depois que o sistema passa a existir, surge o risco do colapso silencioso. A organização técnica impede perda de versões, fragilidade estrutural e dependência de memória individual.', question:'Conseguimos manter isso funcionando e modificá-lo com segurança?', objective:'Estabelecer base técnica mínima que torne o sistema estável, rastreável e evolutivo.', tool:'GitHub e controle de versão', toolDesc:'Registro estruturado das alterações do sistema, permitindo recuperar, comparar e evoluir com segurança.', learning:'Um sistema funcional não é necessariamente um sistema sustentável. Continuidade exige memória técnica e organização.', mistake:'Ignorar a organização técnica porque a primeira versão já funciona.', risk:'Reduz o risco de perda de versões, manutenção caótica e abandono progressivo do projeto.', anchor:'Sem rastreabilidade, cada melhoria corre o risco de se transformar em nova fonte de erro.', tools:[['GitHub','Registra evolução e permite reversão segura.'],['Organização estrutural','Torna o sistema compreensível e menos frágil.'],['Documentação mínima','Reduz dependência de memória individual.']]},
+    {phase:'Fase 5', title:'Evolução Estruturada', classification:'Obrigatória', short:'Evoluir com direção.', lead:'O produto funcional não encerra o trabalho. Ele inaugura um novo problema, o de melhorar continuamente sem perder foco e controle. A evolução estruturada transforma o sistema em produto evolutivo.', question:'Conseguimos melhorar continuamente esse sistema sem perder coerência?', objective:'Transformar o sistema funcional em produto evolutivo, orientado por prioridades claras, ciclos curtos e métricas simples.', tool:'Backlog estruturado', toolDesc:'Lista organizada de melhorias, correções e prioridades, conectada a ciclos de execução e aprendizado.', learning:'Sem prioridade clara, o produto evolui por impulso, urgência e preferência individual.', mistake:'Acreditar que a primeira versão funcional significa produto pronto.', risk:'Reduz o risco de estagnação, crescimento caótico e perda de conexão com o uso real.', anchor:'Produto maduro não é o que já está pronto. É o que consegue melhorar com direção e disciplina.', tools:[['Backlog','Organiza a evolução possível.'],['Ciclos de melhoria contínua','Fecham o loop entre mudança e aprendizado.'],['Métricas técnicas simples','Mostram o efeito real das alterações.']]}]
+};
+
+
+const caseJourney = [
+  {
+    pillar:'Desejabilidade',
+    pillarKey:'desejabilidade',
+    phase:'Fases 1 a 5',
+    title:'Quando a dor deixa de ser impressão e vira problema validado',
+    lead:'No início, a equipe apenas suspeita que existe dificuldade assistencial em casos vasculares na UPA. Após observação, entrevistas, organização do problema, modelagem do comportamento, teste de interesse e validação comportamental, a hipótese se transforma em dor concreta, frequente e relevante.',
+    situation:'Médicos generalistas atendem pacientes com dor ou edema agudo em membro inferior sob pressão de tempo, risco clínico e recursos limitados.',
+    question:'Existe uma dor real, suficientemente intensa e recorrente, para justificar uma solução nova?',
+    decision:'Focar no médico plantonista generalista como usuário prioritário e redefinir a solução como apoio breve à decisão, não como curso longo de ensino vascular.',
+    risk:'Evita construir uma solução tecnicamente elegante para uma dor mal delimitada ou pouco relevante.',
+    evolution:'A ideia deixa de ser “um aplicativo de diagnóstico vascular” e passa a ser “uma ferramenta breve para reduzir incerteza clínica em ambiente de alta pressão”.',
+    executive:'Aqui o projeto aprende a ver a realidade antes de tentar resolvê,la. A maior mudança não está no produto, mas no foco. A equipe descobre qual dor merece ser atacada e em que comportamento a solução precisa caber.',
+    milestones:[
+      ['Observação direta','mostra fricções reais do fluxo assistencial.'],
+      ['Problem statement','condensa a dor prioritária em enunciado operacional.'],
+      ['JTBD','expõe o trabalho real do usuário, decidir rápido com segurança suficiente.'],
+      ['Protótipo simples','mostra que texto demais destrói aderência no plantão.'],
+      ['Teste de uso','confirma que valor percebido depende de rapidez e clareza.']
+    ],
+    anchor:'Primeiro o projeto aprende o que precisa ser resolvido.'
+  },
+  {
+    pillar:'Viabilidade',
+    pillarKey:'viabilidade',
+    phase:'Fases 1 a 5',
+    title:'Quando a solução precisa provar que consegue permanecer viva',
+    lead:'Depois de descobrir que a dor é real e que a proposta desperta valor, o projeto entra na zona mais desconfortável da inovação, a da sustentabilidade. A equipe precisa abandonar a ideia de que impacto, sozinho, mantém um sistema funcionando.',
+    situation:'A solução agora precisa ser pensada como produto contínuo, com custo de infraestrutura, manutenção, segurança, suporte e crescimento progressivo da base de usuários.',
+    question:'Existe um modelo capaz de sustentar essa solução no tempo, sem depender apenas de entusiasmo, editais ou esforço voluntário?',
+    decision:'Estruturar a lógica do negócio, mapear concorrentes, dimensionar o mercado e testar se a unidade econômica tende a gerar valor ou prejuízo.',
+    risk:'Evita lançar um produto útil, porém estruturalmente condenado à interrupção por falta de sustentação financeira e operacional.',
+    evolution:'A ideia deixa de ser apenas uma ferramenta clínica desejada e passa a ser um sistema que precisa ter cliente, canal, custo controlado, receita plausível e lógica de permanência.',
+    executive:'Neste pilar, o projeto deixa de se perguntar apenas se a solução é boa e passa a perguntar se ela continua existindo quando o entusiasmo inicial desaparecer. É aqui que a inovação troca retórica por sustentação.',
+    milestones:[
+      ['Lean Canvas','organiza a lógica mínima do negócio em um quadro coerente.'],
+      ['Matriz de competidores','mostra que a concorrência inclui hábitos, protocolos e soluções indiretas.'],
+      ['TAM, SAM, SOM','define o tamanho real da oportunidade e do nicho inicial.'],
+      ['Business Model Canvas','estrutura a arquitetura mais ampla do sistema econômico.'],
+      ['Unit Economics','expõe se cada usuário ajuda a sustentar o sistema ou acelera o prejuízo.']
+    ],
+    anchor:'Depois de descobrir o valor, o projeto aprende como esse valor se sustenta.'
+  },
+  {
+    pillar:'Exequibilidade',
+    pillarKey:'exequibilidade',
+    phase:'Fases 1 a 5',
+    title:'Quando a ideia precisa virar sistema funcional, estável e evolutivo',
+    lead:'Com problema validado e lógica de negócio minimamente coerente, a equipe entra no território da execução. A partir daqui, a pergunta não é mais se a solução é necessária ou sustentável em tese, mas se a equipe consegue realmente transformá,la em sistema controlável.',
+    situation:'A equipe precisa converter a proposta em requisitos claros, representação navegável, sistema funcional mínimo, base técnica estável e mecanismo de evolução contínua.',
+    question:'Somos capazes de construir isso com clareza, método, rastreabilidade e capacidade de melhoria contínua?',
+    decision:'Traduzir a solução em PRD e MVP, representar o fluxo, gerar a primeira versão funcional, organizar o código e estruturar backlog e ciclos de evolução.',
+    risk:'Evita que a inovação permaneça no campo da intenção ou que a construção se torne caótica, frágil e incompreensível.',
+    evolution:'A ideia deixa de ser conceito e passa a existir como sistema funcional mínimo, depois como sistema controlável e finalmente como produto evolutivo.',
+    executive:'Neste pilar, a equipe aprende que construir rápido não basta. É preciso construir algo que funcione, que possa ser mantido e que consiga melhorar sem perder coerência.',
+    milestones:[
+      ['PRD e MVP','eliminam ambiguidade e reduzem o escopo ao essencial.'],
+      ['Protótipos e navegação','expõem falhas de lógica antes do código.'],
+      ['Construção inicial','materializa a primeira versão funcional mínima.'],
+      ['GitHub e organização técnica','introduzem estabilidade, rastreabilidade e memória do sistema.'],
+      ['Backlog e métricas','transformam a primeira versão em produto evolutivo.']
+    ],
+    anchor:'Por fim, o projeto aprende a transformar valor em sistema.'
+  }
+];
+
+
+const toolClassificationMap = {
+  desejabilidade: {
+    'Observação direta':'Obrigatória','Entrevistas com usuários':'Obrigatória','Shadowing':'Desejável','Lista de dores recorrentes':'Obrigatória','Problem statement':'Obrigatória','Segmentação de clientes':'Obrigatória','JTBD':'Obrigatória','Mapa de empatia':'Desejável','Persona':'Desejável','Teste de conceito':'Obrigatória','Protótipo simples':'Obrigatória','Landing page':'Desejável','Teste de uso real':'Obrigatória','Feedback estruturado':'Obrigatória','Métricas simples':'Obrigatória'
+  },
+  viabilidade: {
+    'Lean Canvas':'Obrigatória','Cliente e problema':'Obrigatória','Matriz de competidores':'Obrigatória','Substitutos indiretos':'Desejável','Posicionamento competitivo':'Obrigatória','TAM':'Obrigatória','SAM':'Obrigatória','SOM':'Obrigatória','Business Model Canvas':'Desejável','Parcerias-chave':'Desejável','Estrutura de custos':'Obrigatória','Unit Economics':'Obrigatória','CAC':'Obrigatória','LTV':'Obrigatória','Payback':'Desejável'
+  },
+  exequibilidade: {
+    'PRD':'Obrigatória','Escopo do MVP':'Obrigatória','Fluxo de usuário':'Obrigatória','Prototipação de telas':'Obrigatória','Arquitetura de navegação':'Obrigatória','Simulação de uso':'Obrigatória','Lovable ou equivalente':'Obrigatória','IA para geração de código':'Obrigatória','Integração mínima':'Obrigatória','GitHub':'Obrigatória','Estrutura do projeto':'Obrigatória','Documentação mínima':'Obrigatória','Backlog':'Obrigatória','Gestão ágil':'Desejável','Métricas técnicas':'Obrigatória'
+  }
+};
+
+function getToolClassification(key, toolName){
+  return (toolClassificationMap[key] && toolClassificationMap[key][toolName]) || 'Desejável';
+}
+
+function applyToolFilter(){
+  const filter = window.currentToolFilter || 'all';
+  document.querySelectorAll('[data-tool-classification]').forEach(el => {
+    const matches = filter === 'all' || el.dataset.toolClassification === filter;
+    el.classList.toggle('hidden-by-filter', !matches);
+  });
+}
+
+function updateJumpState(activeId){
+  document.querySelectorAll('.pillar-jump').forEach(btn => {
+    btn.classList.toggle('active-jump', btn.dataset.jump === activeId);
+  });
+}
+
+function setPresentationMode(force){
+  const body = document.body;
+  const next = force != null ? force : !body.classList.contains('presentation-mode');
+  body.classList.toggle('presentation-mode', next);
+  const btn = document.querySelector('[data-role="presentation"]');
+  if(btn) btn.classList.toggle('is-on', next);
+}
+
+function setFocusMode(force){
+  const body = document.body;
+  const next = force != null ? force : !body.classList.contains('focus-mode');
+  body.classList.toggle('focus-mode', next);
+  const btn = document.querySelector('[data-role="focus"]');
+  if(btn) btn.classList.toggle('is-on', next);
+}
+
+function renderCaseJourney(){
+  if (window.caseCurrent == null) window.caseCurrent = 0;
+  const item = caseJourney[window.caseCurrent];
+  const tabs = document.getElementById('caseTabs');
+  tabs.innerHTML = caseJourney.map((c, index) => `
+    <button class="case-tab ${index===window.caseCurrent?'active-case':''} rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm" data-case-index="${index}">
+      <div class="text-xs uppercase tracking-wide font-bold mb-1 opacity-80">${c.pillar}</div>
+      <div class="font-bold text-base mb-1">${c.title}</div>
+      <div class="text-sm ${index===window.caseCurrent ? 'text-slate-200' : 'text-slate-500'}">${c.phase}</div>
+    </button>
+  `).join('');
+  document.getElementById('casePillarBadge').textContent = item.pillar;
+  document.getElementById('casePhaseBadge').textContent = item.phase;
+  document.getElementById('caseTitle').textContent = item.title;
+  document.getElementById('caseLead').textContent = item.lead;
+  document.getElementById('caseSituation').textContent = item.situation;
+  document.getElementById('caseQuestion').textContent = item.question;
+  document.getElementById('caseDecision').textContent = item.decision;
+  document.getElementById('caseRisk').textContent = item.risk;
+  document.getElementById('caseEvolution').textContent = item.evolution;
+  document.getElementById('caseExecutive').textContent = item.executive;
+  document.getElementById('caseAnchor').textContent = item.anchor;
+  document.getElementById('caseMilestones').innerHTML = item.milestones.map((m, idx) => `
+    <div class="case-card ${item.pillarKey==='desejabilidade'?'case-stripe-d':item.pillarKey==='viabilidade'?'case-stripe-v':'case-stripe-e'}">
+      <div class="text-xs uppercase tracking-wide font-bold text-slate-500 mb-1">Marco ${idx+1}</div>
+      <div class="font-bold text-slate-800 mb-1">${m[0]}</div>
+      <div class="text-sm text-slate-600 leading-relaxed">${m[1]}</div>
+    </div>
+  `).join('');
+  document.querySelectorAll('[data-case-index]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.caseCurrent = Number(btn.dataset.caseIndex);
+      renderCaseJourney();
+    });
+  });
+}
+
+function renderPillar(key){
+  const data = pillarData[key];
+  const currentKey = `${key}Current`;
+  if (window[currentKey] == null) window[currentKey] = 0;
+  const current = window[currentKey];
+  const item = data[current];
+  const stepsEl = document.getElementById(`${key}Steps`);
+  stepsEl.innerHTML = data.map((phase, index) => `
+    <button class="step-btn ${index===current?'active':''} ${key} text-left rounded-xl border p-4 shadow-sm bg-white ${key==='desejabilidade'?'border-cyan-200':key==='viabilidade'?'border-orange-200':'border-yellow-200'}" data-pillar="${key}" data-index="${index}">
+      <div class="text-xs uppercase tracking-wide font-bold mb-1 opacity-80">${phase.phase}</div>
+      <div class="font-bold text-base mb-1">${phase.title}</div>
+      <div class="text-sm ${index===current ? (key==='desejabilidade'?'text-cyan-100':key==='viabilidade'?'text-orange-100':'text-yellow-100') : 'text-slate-500'}">${phase.short}</div>
+    </button>`).join('');
+
+  document.getElementById(`${key}PhaseBadge`).textContent = item.phase;
+  document.getElementById(`${key}ClassBadge`).textContent = item.classification;
+  document.getElementById(`${key}Title`).textContent = item.title;
+  document.getElementById(`${key}Lead`).textContent = item.lead;
+  document.getElementById(`${key}Question`).textContent = item.question;
+  document.getElementById(`${key}Objective`).textContent = item.objective;
+  document.getElementById(`${key}MainTool`).textContent = item.tool;
+  document.getElementById(`${key}MainToolDesc`).textContent = item.toolDesc;
+  document.getElementById(`${key}Learning`).textContent = item.learning;
+  document.getElementById(`${key}Mistake`).textContent = item.mistake;
+  document.getElementById(`${key}Risk`).textContent = item.risk;
+  document.getElementById(`${key}Anchor`).textContent = item.anchor;
+  document.getElementById(`${key}ToolsList`).innerHTML = item.tools.map(t => {
+    const cls = getToolClassification(key, t[0]);
+    const clsLabel = cls || 'Obrigatória';
+    const cssClass = clsLabel.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u');
+    const filterClass = clsLabel;
+    return `<div class="tool-card-box border ${key==='desejabilidade'?'border-cyan-100':key==='viabilidade'?'border-orange-100':'border-yellow-100'}" data-tool-classification="${filterClass}"><span class="tool-chip ${cssClass==='obrigatoria'?'obrigatoria':cssClass==='desejavel'?'desejavel':'dispensavel'}">${clsLabel}</span><div class="font-bold text-slate-800 mb-1">${t[0]}</div><div class="text-sm text-slate-600 leading-relaxed">${t[1]}</div></div>`;
+  }).join('');
+  applyToolFilter();
+
+  document.querySelectorAll(`[data-pillar="${key}"]`).forEach(btn => {
+    btn.addEventListener('click', () => { window[currentKey] = Number(btn.dataset.index); renderPillar(key); });
+  });
+}
+
+function wrapLabel(label, limit) {
+    if (Array.isArray(label)) return label;
+    if (typeof label !== 'string') return label;
+    if (label.length <= limit) return label;
+    const words = label.split(' ');
+    let lines = [];
+    let currentLine = words[0];
+    for (let i = 1; i < words.length; i++) {
+        if (currentLine.length + words[i].length + 1 <= limit) currentLine += ' ' + words[i];
+        else { lines.push(currentLine); currentLine = words[i]; }
+    }
+    lines.push(currentLine);
+    return lines;
+}
+
+window.onload = function(){
+  renderCaseJourney();
+  renderPillar('desejabilidade');
+  renderPillar('viabilidade');
+  renderPillar('exequibilidade');
+  updateJumpState('desejabilidade');
+  document.querySelectorAll('.pillar-jump').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.jump;
+      const target = document.getElementById(id);
+      updateJumpState(id);
+      if(target){
+        target.classList.add('presentation-highlight');
+        setTimeout(() => target.classList.remove('presentation-highlight'), 1200);
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+  document.querySelectorAll('.toolbar-btn[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      window.currentToolFilter = filter;
+      document.querySelectorAll('.toolbar-btn[data-filter]').forEach(b => b.classList.toggle('active-filter', b===btn));
+      applyToolFilter();
+    });
+  });
+  const presentBtn = document.querySelector('[data-role="presentation"]');
+  if(presentBtn) presentBtn.addEventListener('click', () => setPresentationMode());
+  const focusBtn = document.querySelector('[data-role="focus"]');
+  if(focusBtn) focusBtn.addEventListener('click', () => setFocusMode());
+  document.addEventListener('keydown', (ev) => {
+    if(ev.key.toLowerCase() === 'p') setPresentationMode();
+    if(ev.key.toLowerCase() === 'f') setFocusMode();
+  });
+
+  const wrapLimit = 16;
+  const labelsRadar = ['Desejabilidade (O Desejo)', 'Exequibilidade (A Técnica)', ['Viabilidade','(O Negócio)']].map(l => wrapLabel(l, wrapLimit));
+  const ctxRisks = document.getElementById('risksChart').getContext('2d');
+  new Chart(ctxRisks, {
+    type: 'radar',
+    data: { labels: labelsRadar, datasets: [
+      { label:'Inovação Real', data:[100,100,100], backgroundColor:'rgba(30,41,59,0.2)', borderColor:'#1E293B', pointBackgroundColor:'#1E293B', borderWidth:3 },
+      { label:'Projeto de Vaidade', data:[90,90,20], backgroundColor:'rgba(6,182,212,0.2)', borderColor:'#06B6D4', borderDash:[5,5] },
+      { label:'Produto Empurrado', data:[20,90,90], backgroundColor:'rgba(249,115,22,0.2)', borderColor:'#F97316', borderDash:[5,5] },
+      { label:'A Alucinação', data:[90,20,90], backgroundColor:'rgba(234,179,8,0.2)', borderColor:'#EAB308', borderDash:[5,5] }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ r:{ angleLines:{ color:'rgba(0,0,0,0.1)' }, grid:{ color:'rgba(0,0,0,0.1)' }, pointLabels:{ font:{ family:'Inter', size:12, weight:'bold' }, color:'#334155', padding:15 }, ticks:{ display:false, min:0, max:100 } } }, plugins:{ legend:{ position:'bottom', labels:{ font:{ family:'Inter' }, usePointStyle:true } } } }
+  });
+
+  const ctxPitch = document.getElementById('pitchChart').getContext('2d');
+  new Chart(ctxPitch, {
+    type:'bar',
+    data:{ labels:[['Elevator','1 min'],['Rocket','3 min'],['Standard','5 min'],['Deep Dive','7 min']], datasets:[
+      { label:'Desejabilidade', data:[80,50,35,25], backgroundColor:'#06B6D4' },
+      { label:'Exequibilidade', data:[10,30,35,30], backgroundColor:'#EAB308' },
+      { label:'Viabilidade', data:[10,20,30,45], backgroundColor:'#F97316' }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{ x:{ stacked:true, grid:{ color:'rgba(255,255,255,0.1)' }, ticks:{ color:'#CBD5E1', callback:(v)=>v+'%' } }, y:{ stacked:true, grid:{ display:false }, ticks:{ color:'#F8FAFC', font:{ weight:'bold', family:'Inter' } } } }, plugins:{ legend:{ position:'top', labels:{ color:'#F8FAFC', font:{ family:'Inter' }, usePointStyle:true } } } }
+  });
+};
+</script>
+</body>
+</html>
