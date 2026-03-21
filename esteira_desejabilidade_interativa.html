@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esteira da Desejabilidade, Fluxo Visual</title>
+  <style>
+    :root {
+      --bg: #f3f7fb;
+      --card: #ffffff;
+      --text: #122033;
+      --muted: #5f6c80;
+      --line: #d9e4f0;
+      --shadow: 0 14px 30px rgba(18, 32, 51, 0.08);
+      --r: 22px;
+
+      --c1: #2563eb;
+      --c2: #7c3aed;
+      --c3: #0f766e;
+      --c4: #c2410c;
+      --c5: #be185d;
+
+      --obg: #9f1239;
+      --obg-soft: #fce7ef;
+      --des: #a16207;
+      --des-soft: #fef3c7;
+      --dis: #166534;
+      --dis-soft: #dcfce7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      color: var(--text);
+    }
+
+    .container {
+      width: min(1220px, 94vw);
+      margin: 0 auto;
+      padding: 26px 0 54px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #eef5ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      background: #eaf2ff;
+      color: #2457a6;
+    }
+
+    h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 900px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .input, .select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 16px;
+      padding: 13px 14px;
+      font-size: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    .flowchart-wrap {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .flowchart-title {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .flowchart {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .flow-box {
+      border-radius: 20px;
+      padding: 16px;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+
+    .flow-box small {
+      display: block;
+      opacity: 0.9;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .flow-box span {
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .flow-box em {
+      font-style: normal;
+      font-size: 14px;
+      opacity: 0.95;
+      line-height: 1.4;
+      margin-top: 8px;
+    }
+
+    .flow-1 { background: linear-gradient(135deg, var(--c1), #4f83f1); }
+    .flow-2 { background: linear-gradient(135deg, var(--c2), #9d68f6); }
+    .flow-3 { background: linear-gradient(135deg, var(--c3), #18a295); }
+    .flow-4 { background: linear-gradient(135deg, var(--c4), #ea6f2f); }
+    .flow-5 { background: linear-gradient(135deg, var(--c5), #e24b8f); }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-top {
+      padding: 24px;
+      color: #fff;
+    }
+
+    .panel-top.phase-1 { background: linear-gradient(135deg, var(--c1), #5b8cf3); }
+    .panel-top.phase-2 { background: linear-gradient(135deg, var(--c2), #9a63f4); }
+    .panel-top.phase-3 { background: linear-gradient(135deg, var(--c3), #18a194); }
+    .panel-top.phase-4 { background: linear-gradient(135deg, var(--c4), #e36b2c); }
+    .panel-top.phase-5 { background: linear-gradient(135deg, var(--c5), #dd4a89); }
+
+    .panel-top h2 { margin: 0 0 8px; font-size: 30px; line-height: 1.1; }
+    .panel-top p { margin: 0; line-height: 1.7; opacity: 0.96; }
+
+    .panel-body { padding: 22px; }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: #fcfdff;
+    }
+
+    .mini-card h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+
+    .mini-card p, .mini-card li { margin: 0; color: var(--muted); line-height: 1.7; }
+    .mini-card ul { margin: 8px 0 0; padding-left: 18px; }
+
+    .section-title { margin: 0 0 12px; font-size: 18px; }
+
+    .cards { display: grid; gap: 12px; }
+
+    .tool-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .tool-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 8px;
+    }
+
+    .tool-card h4 { margin: 0; font-size: 18px; line-height: 1.25; }
+    .tool-card p { margin: 0; color: var(--muted); line-height: 1.65; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.obrigatoria { background: var(--obg-soft); color: var(--obg); }
+    .tag.desejavel { background: var(--des-soft); color: var(--des); }
+    .tag.dispensavel { background: var(--dis-soft); color: var(--dis); }
+
+    .tool-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .more-btn {
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .phase-color.phase-1 { color: var(--c1); }
+    .phase-color.phase-2 { color: var(--c2); }
+    .phase-color.phase-3 { color: var(--c3); }
+    .phase-color.phase-4 { color: var(--c4); }
+    .phase-color.phase-5 { color: var(--c5); }
+
+    .detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #d8e3ef; }
+    .detail.open { display: block; }
+    .detail strong { display: block; margin-bottom: 4px; color: var(--text); }
+    .detail p, .detail li { color: var(--muted); line-height: 1.7; margin: 0; }
+    .detail ul { margin: 6px 0 0; padding-left: 18px; }
+
+    .right-col { display: grid; gap: 18px; }
+
+    .side-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .side-card h3 { margin: 0 0 10px; font-size: 18px; }
+    .side-card p, .side-card li { margin: 0; color: var(--muted); line-height: 1.75; }
+    .side-card ul { margin: 8px 0 0; padding-left: 18px; }
+
+    .legend { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+    @media (max-width: 1080px) {
+      .flowchart, .content, .topbar, .mini-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="pill">Síntese visual interativa</div>
+      <h1>Esteira da Desejabilidade</h1>
+      <p>Fluxo único, sem linha do tempo. Clique nos blocos para navegar entre as fases e abra apenas os detalhes necessários.</p>
+    </section>
+
+    <section class="topbar">
+      <input id="searchInput" class="input" type="text" placeholder="Buscar ferramenta, exemplo clínico ou erro clássico" />
+      <select id="filterSelect" class="select">
+        <option value="todos">Todas as classificações</option>
+        <option value="obrigatoria">Obrigatórias</option>
+        <option value="desejavel">Desejáveis</option>
+        <option value="dispensavel">Dispensáveis</option>
+      </select>
+    </section>
+
+    <section class="flowchart-wrap">
+      <h2 class="flowchart-title">Fluxograma navegável</h2>
+      <div class="flowchart" id="flowchart"></div>
+    </section>
+
+    <section class="content">
+      <article class="panel">
+        <div id="panelTop" class="panel-top phase-1">
+          <h2 id="phaseTitle"></h2>
+          <p id="phaseIntro"></p>
+        </div>
+        <div class="panel-body">
+          <div class="mini-grid">
+            <div class="mini-card">
+              <h4>Objetivo</h4>
+              <p id="phaseObjective"></p>
+            </div>
+            <div class="mini-card">
+              <h4>Pergunta crítica</h4>
+              <p id="phaseQuestion"></p>
+            </div>
+          </div>
+
+          <h3 class="section-title">Cards da fase</h3>
+          <div class="cards" id="toolsGrid"></div>
+        </div>
+      </article>
+
+      <aside class="right-col">
+        <section class="side-card">
+          <h3>Caso clínico resumido</h3>
+          <p id="phaseCase"></p>
+        </section>
+
+        <section class="side-card">
+          <h3>Síntese executiva da fase</h3>
+          <p id="phaseSummary"></p>
+          <ul id="phaseTakeaways"></ul>
+        </section>
+
+        <section class="side-card">
+          <h3>Erro clássico</h3>
+          <p id="phaseMistake"></p>
+        </section>
+
+        <section class="side-card">
+          <h3>Legenda</h3>
+          <div class="legend">
+            <span class="tag obrigatoria">Obrigatória</span>
+            <span class="tag desejavel">Desejável</span>
+            <span class="tag dispensavel">Dispensável</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    const phases = [
+      { number: 1, title: 'Realidade do Problema', short: 'Descobrir a dor real.', intro: 'Sair da cabeça e entrar no mundo real. Observar rotina, pressão, interrupções e sinais concretos de dor.', objective: 'Identificar problemas reais, concretos e repetidos a partir do comportamento observado e da experiência vivida pelo usuário.', question: 'Isso realmente acontece, com que frequência e em que contexto?', case: 'Na UPA, médicos generalistas enfrentam dificuldade para diferenciar rapidamente dor ou edema agudo em membro inferior, sob forte pressão de tempo e risco.', summary: 'A equipe ainda não deveria ter solução. O ganho legítimo é comprovar que a dor existe e é relevante.', takeaways: ['Primeiro observar, depois interpretar.', 'Padrão vale mais do que caso impressionante.', 'Realidade precede solução.'], mistake: 'Apaixonar-se pela própria interpretação antes de terminar a coleta da realidade.', colorClass: 'phase-1', flowClass: 'flow-1', tools: [
+          { name: 'Observação direta', classification: 'obrigatoria', summary: 'Ver o problema acontecendo.', detail: 'Acompanhar o ambiente clínico sem intervir, registrando fatos, interrupções, decisões e padrões. Exemplo, em atendimentos com dor na perna, a hipótese vascular aparece, mas é abandonada sem registro claro do motivo.', errors: ['Observar pouco e generalizar demais.', 'Registrar interpretação em vez de fato.'] },
+          { name: 'Entrevistas com usuários', classification: 'obrigatoria', summary: 'Ouvir a experiência concreta.', detail: 'Conversas focadas em eventos reais e recentes, explorando dificuldade, decisão e consequência. Exemplo, o plantonista relata que a maior dor é decidir rápido sem medo de perder algo grave.', errors: ['Induzir resposta positiva.', 'Misturar entrevista com pitch.'] },
+          { name: 'Shadowing', classification: 'desejavel', summary: 'Acompanhar o usuário ao longo da rotina.', detail: 'Seguir o profissional por um período relevante para captar sobrecarga distribuída ao longo do turno. Exemplo, a dificuldade diagnóstica soma-se à fadiga decisória acumulada.', errors: ['Seguir sem foco.', 'Registrar tudo e concluir pouco.'] },
+          { name: 'Diário do usuário', classification: 'dispensavel', summary: 'Registro pelo próprio usuário.', detail: 'Pode captar eventos fora da presença da equipe, mas exige alta adesão e costuma ser fraco no início. Exemplo, médicos sobrecarregados tendem a devolver registros incompletos.', errors: ['Esperar adesão alta.', 'Usar como substituto da observação.'] }
+        ] },
+      { number: 2, title: 'Estruturação do Problema', short: 'Definir qual dor importa.', intro: 'Transformar dados dispersos em um problema claro, específico e priorizado.', objective: 'Converter material bruto em formulação clara, específica, priorizada e acionável do problema.', question: 'Entre tudo o que apareceu, qual problema merece foco agora?', case: 'A equipe sai de “melhorar o atendimento vascular” e chega a “reduzir a incerteza diagnóstica em dor e edema agudo de membro inferior na UPA”.', summary: 'Nesta fase, o projeto ganha foco. Sem esse recorte, toda solução futura tende a ser genérica.', takeaways: ['Nem toda dor observada merece prioridade.', 'Problema amplo demais destrói clareza.', 'Segmentação é parte do foco.'], mistake: 'Querer preservar todos os problemas ao mesmo tempo.', colorClass: 'phase-2', flowClass: 'flow-2', tools: [
+          { name: 'Lista de dores recorrentes', classification: 'obrigatoria', summary: 'Organizar padrões.', detail: 'Agrupar dores semelhantes, registrar frequência e separar o que é problema central do que é efeito secundário.', errors: ['Misturar causa e efeito.', 'Escolher a dor mais chamativa.'] },
+          { name: 'Problem statement', classification: 'obrigatoria', summary: 'Escrever o problema com precisão.', detail: 'Formulação que inclui usuário, situação, dor concreta e impacto. Exemplo, médicos de UPA têm dificuldade de reduzir rapidamente a incerteza diante de dor ou edema agudo em membro inferior.', errors: ['Ser vago demais.', 'Misturar problema com solução.'] },
+          { name: 'Segmentação de clientes', classification: 'obrigatoria', summary: 'Escolher para quem validar.', detail: 'Dividir usuários possíveis em grupos distintos e escolher qual sente a dor mais estratégica. Exemplo, o segmento principal é o médico plantonista generalista.', errors: ['Querer servir a todos.', 'Confundir usuário e comprador.'] },
+          { name: 'Matriz dor x frequência', classification: 'desejavel', summary: 'Priorizar por impacto e recorrência.', detail: 'Cruzar intensidade da dor com frequência de ocorrência para apoiar decisão. Exemplo, a incerteza em dor e edema agudo aparece como combinação forte de frequência e impacto.', errors: ['Fingir precisão matemática.', 'Ignorar discussão qualitativa.'] }
+        ] },
+      { number: 3, title: 'Modelagem do Comportamento', short: 'Entender como o usuário decide.', intro: 'Compreender como o usuário pensa, sente e age diante da dor. Solução desejável precisa caber no comportamento real.', objective: 'Mapear como o usuário pensa, decide, sente, age e busca resolver o problema no contexto em que ele ocorre.', question: 'Como o usuário realmente decide diante dessa dor?', case: 'O médico da UPA não precisa de um curso longo. Ele precisa de um recurso breve para reduzir incerteza sem travar o plantão.', summary: 'Nesta fase, a equipe descobre o trabalho real que precisa ser feito e o contexto que molda o uso.', takeaways: ['Perfil não basta, o centro é o trabalho a ser feito.', 'Tempo, medo e pressão mudam comportamento.', 'Boa solução no papel pode fracassar no fluxo real.'], mistake: 'Confundir descrição do usuário com compreensão do comportamento.', colorClass: 'phase-3', flowClass: 'flow-3', tools: [
+          { name: 'JTBD', classification: 'obrigatoria', summary: 'Definir o trabalho real.', detail: 'Estrutura que liga situação, ação desejada e resultado. Exemplo, no plantão, decidir rapidamente se há risco vascular importante.', errors: ['Descrever profissão e não trabalho.', 'Escrever JTBD genérico.'] },
+          { name: 'Mapa de Empatia', classification: 'desejavel', summary: 'Explorar o contexto emocional.', detail: 'Organizar o que o usuário vê, escuta, pensa, sente, fala e faz. Exemplo, o plantonista vê fila, escuta cobrança, sente medo de errar e usa atalhos cognitivos.', errors: ['Preencher por imaginação.', 'Usar como peça decorativa.'] },
+          { name: 'Persona', classification: 'desejavel', summary: 'Sintetizar o usuário prioritário.', detail: 'Representação fundamentada do segmento principal, com dores, restrições e critérios de decisão. Exemplo, médico de UPA com alta carga assistencial e baixa tolerância a soluções longas.', errors: ['Criar sem evidência.', 'Valorizar detalhes irrelevantes.'] },
+          { name: 'Jornada do usuário', classification: 'dispensavel', summary: 'Mapear a experiência completa.', detail: 'Útil mais adiante, mas cedo demais quando a dor principal ainda está sendo validada.', errors: ['Começar por ela cedo demais.', 'Mapear demais e aprender de menos.'] }
+        ] },
+      { number: 4, title: 'Teste de Interesse', short: 'Ver se a proposta faz sentido.', intro: 'Expor a proposta ao usuário e verificar se ela desperta interesse claro, compreensível e relevante.', objective: 'Verificar se a solução proposta desperta interesse inicial concreto e se o usuário reconhece nela potencial de valor.', question: 'A solução proposta desperta interesse real ou apenas curiosidade?', case: 'A proposta passa a ser uma ferramenta rápida, acessível no celular, para reconhecer sinais de alarme e reduzir incerteza.', summary: 'A solução começa a ganhar forma, mas o aprendizado mais valioso continua sendo descobrir o que o usuário rejeita, simplifica ou valoriza.', takeaways: ['Aprovação verbal não basta.', 'Proposta precisa ser curta e clara.', 'Tangibilidade melhora o aprendizado.'], mistake: 'Confundir curiosidade com valor percebido.', colorClass: 'phase-4', flowClass: 'flow-4', tools: [
+          { name: 'Teste de conceito', classification: 'obrigatoria', summary: 'Apresentar a ideia em linguagem simples.', detail: 'Expor problema, solução, contexto de uso e benefício principal sem produto pronto. Exemplo, médicos avisam que não usarão se a solução parecer aula longa no plantão.', errors: ['Fazer pitch em vez de teste.', 'Aceitar elogio genérico como validação.'] },
+          { name: 'Protótipo simples', classification: 'obrigatoria', summary: 'Tornar a proposta tangível.', detail: 'Representação mínima da solução. Exemplo, o wireframe mostra que texto demais destrói aderência no fluxo do plantão.', errors: ['Refinar demais cedo.', 'Testar tudo de uma vez.'] },
+          { name: 'Landing page', classification: 'desejavel', summary: 'Medir interesse em escala maior.', detail: 'Página simples com proposta de valor e chamada para ação. Exemplo, mostra se o problema ressoa além do pequeno grupo inicial.', errors: ['Confundir clique com uso.', 'Usar mensagem vaga.'] },
+          { name: 'Fake door', classification: 'desejavel', summary: 'Medir intenção real de ação.', detail: 'Oferecer acesso a funcionalidade ainda inexistente e observar tentativa de uso. Exemplo, o clique em “iniciar triagem rápida vascular” vale mais que elogio verbal.', errors: ['Usar sem hipótese clara.', 'Gerar frustração desnecessária.'] }
+        ] },
+      { number: 5, title: 'Validação Comportamental', short: 'Confirmar valor pelo uso.', intro: 'Passar da fala para a ação. O critério final da desejabilidade é comportamento observável, não simpatia intelectual.', objective: 'Confirmar valor percebido por meio de comportamento observável, uso efetivo e sinais concretos de aderência.', question: 'O comportamento do usuário confirma que há valor percebido real?', case: 'A pergunta final deixa de ser “os médicos gostaram” e passa a ser “eles conseguem usar sem abandonar a solução em contexto de pressão”.', summary: 'A desejabilidade torna-se robusta quando o comportamento confirma valor, e não apenas quando a ideia parece interessante.', takeaways: ['Uso real vale mais do que opinião.', 'Métricas simples já ajudam muito.', 'Elogio sem comportamento é insuficiente.'], mistake: 'Encerrar a validação porque alguns usuários elogiaram a solução.', colorClass: 'phase-5', flowClass: 'flow-5', tools: [
+          { name: 'Teste de uso real', classification: 'obrigatoria', summary: 'Observar interação concreta.', detail: 'Colocar a solução em cenário simulado, controlado ou real e registrar entendimento, hesitação, abandono e conclusão.', errors: ['Ajudar demais durante o teste.', 'Ignorar abandono e hesitação.'] },
+          { name: 'Feedback estruturado', classification: 'obrigatoria', summary: 'Coletar percepção comparável.', detail: 'Perguntar de modo organizado sobre clareza, utilidade, barreiras e condições para virar hábito.', errors: ['Perguntar de forma vaga demais.', 'Ignorar o comportamento observado.'] },
+          { name: 'Métricas simples', classification: 'obrigatoria', summary: 'Quantificar sinais básicos de valor.', detail: 'Medir taxa de conclusão, tempo de uso, retorno e pedido de acesso posterior.', errors: ['Medir tudo e não decidir nada.', 'Usar métricas de vaidade.'] },
+          { name: 'NPS', classification: 'dispensavel', summary: 'Métrica de recomendação, útil mais tarde.', detail: 'Após um teste único, é mais importante saber se o usuário voltaria a usar do que se recomendaria.', errors: ['Aplicar cedo demais.', 'Tratar recomendação como substituto de uso.'] }
+        ] }
+    ];
+
+    const flowchartEl = document.getElementById('flowchart');
+    const phaseTitle = document.getElementById('phaseTitle');
+    const phaseIntro = document.getElementById('phaseIntro');
+    const phaseObjective = document.getElementById('phaseObjective');
+    const phaseQuestion = document.getElementById('phaseQuestion');
+    const phaseCase = document.getElementById('phaseCase');
+    const phaseSummary = document.getElementById('phaseSummary');
+    const phaseTakeaways = document.getElementById('phaseTakeaways');
+    const phaseMistake = document.getElementById('phaseMistake');
+    const toolsGrid = document.getElementById('toolsGrid');
+    const panelTop = document.getElementById('panelTop');
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+
+    let active = 0;
+
+    function labelClass(v) {
+      if (v === 'obrigatoria') return 'Obrigatória';
+      if (v === 'desejavel') return 'Desejável';
+      return 'Dispensável';
+    }
+
+    function renderNavigation() {
+      flowchartEl.innerHTML = phases.map((p, i) => `
+        <div class="flow-box ${p.flowClass}" data-index="${i}">
+          <div>
+            <small>FASE ${p.number}</small>
+            <span>${p.title}</span>
+          </div>
+          <em>${p.short}</em>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('[data-index]').forEach(el => {
+        el.addEventListener('click', () => {
+          active = Number(el.dataset.index);
+          renderNavigation();
+          renderPhase();
+        });
+      });
+    }
+
+    function renderPhase() {
+      const p = phases[active];
+      phaseTitle.textContent = `Fase ${p.number}, ${p.title}`;
+      phaseIntro.textContent = p.intro;
+      phaseObjective.textContent = p.objective;
+      phaseQuestion.textContent = p.question;
+      phaseCase.textContent = p.case;
+      phaseSummary.textContent = p.summary;
+      phaseMistake.textContent = p.mistake;
+      panelTop.className = `panel-top ${p.colorClass}`;
+      phaseTakeaways.innerHTML = p.takeaways.map(t => `<li>${t}</li>`).join('');
+      renderTools();
+    }
+
+    function renderTools() {
+      const p = phases[active];
+      const search = searchInput.value.trim().toLowerCase();
+      const filter = filterSelect.value;
+
+      const visible = p.tools.filter(t => {
+        const hay = [t.name, t.summary, t.detail, ...(t.errors || [])].join(' ').toLowerCase();
+        const okSearch = hay.includes(search);
+        const okFilter = filter === 'todos' || t.classification === filter;
+        return okSearch && okFilter;
+      });
+
+      toolsGrid.innerHTML = visible.length ? visible.map((t, idx) => `
+        <div class="tool-card">
+          <div class="tool-top">
+            <div>
+              <h4 class="phase-color ${p.colorClass}">${t.name}</h4>
+              <p>${t.summary}</p>
+            </div>
+            <span class="tag ${t.classification}">${labelClass(t.classification)}</span>
+          </div>
+          <div class="tool-actions">
+            <p>${t.detail.slice(0, 110)}...</p>
+            <button class="more-btn" data-detail="detail-${active}-${idx}">Detalhes</button>
+          </div>
+          <div class="detail" id="detail-${active}-${idx}">
+            <strong>Explicação</strong>
+            <p>${t.detail}</p>
+            <strong style="margin-top:10px;">Erros clássicos</strong>
+            <ul>${t.errors.map(e => `<li>${e}</li>`).join('')}</ul>
+          </div>
+        </div>
+      `).join('') : `<div class="tool-card"><h4>Nenhum card encontrado</h4><p>Ajuste a busca ou o filtro de classificação.</p></div>`;
+
+      document.querySelectorAll('.more-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-detail');
+          const el = document.getElementById(id);
+          el.classList.toggle('open');
+          btn.textContent = el.classList.contains('open') ? 'Ocultar' : 'Detalhes';
+        });
+      });
+    }
+
+    searchInput.addEventListener('input', renderTools);
+    filterSelect.addEventListener('change', renderTools);
+
+    renderNavigation();
+    renderPhase();
+  </script>
+</body>
+          <p id="phaseCase"></p>
+        </section>
+
+        <section class="side-card">
+          <h3>Síntese executiva da fase</h3>
+          <p id="phaseSummary"></p>
+          <ul id="phaseTakeaways"></ul>
+        </section>
+
+        <section class="side-card">
+          <h3>Erro clássico</h3>
+          <p id="phaseMistake"></p>
+        </section>
+
+        <section class="side-card">
+          <h3>Legenda</h3>
+          <div class="legend">
+            <span class="tag obrigatoria">Obrigatória</span>
+            <span class="tag desejavel">Desejável</span>
+            <span class="tag dispensavel">Dispensável</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    const phases = [
+      {
+        number: 1,
+        title: 'Realidade do Problema',
+        short: 'Descobrir a dor real.',
+        intro: 'Sair da cabeça e entrar no mundo real. Observar rotina, pressão, interrupções e sinais concretos de dor.',
+        objective: 'Identificar problemas reais, concretos e repetidos a partir do comportamento observado e da experiência vivida pelo usuário.',
+        question: 'Isso realmente acontece, com que frequência e em que contexto?',
+        case: 'Na UPA, médicos generalistas enfrentam dificuldade para diferenciar rapidamente dor ou edema agudo em membro inferior, sob forte pressão de tempo e risco.',
+        summary: 'A equipe ainda não deveria ter solução. O ganho legítimo é comprovar que a dor existe e é relevante.',
+        takeaways: ['Primeiro observar, depois interpretar.', 'Padrão vale mais do que caso impressionante.', 'Realidade precede solução.'],
+        mistake: 'Apaixonar-se pela própria interpretação antes de terminar a coleta da realidade.',
+        colorClass: 'phase-1',
+        flowClass: 'flow-1',
+        tools: [
+          { name: 'Observação direta', classification: 'obrigatoria', summary: 'Ver o problema acontecendo.', detail: 'Acompanhar o ambiente clínico sem intervir, registrando fatos, interrupções, decisões e padrões. Exemplo, em atendimentos com dor na perna, a hipótese vascular aparece, mas é abandonada sem registro claro do motivo.', errors: ['Observar pouco e generalizar demais.', 'Registrar interpretação em vez de fato.'] },
+          { name: 'Entrevistas com usuários', classification: 'obrigatoria', summary: 'Ouvir a experiência concreta.', detail: 'Conversas focadas em eventos reais e recentes, explorando dificuldade, decisão e consequência. Exemplo, o plantonista relata que a maior dor é decidir rápido sem medo de perder algo grave.', errors: ['Induzir resposta positiva.', 'Misturar entrevista com pitch.'] },
+          { name: 'Shadowing', classification: 'desejavel', summary: 'Acompanhar o usuário ao longo da rotina.', detail: 'Seguir o profissional por um período relevante para captar sobrecarga distribuída ao longo do turno. Exemplo, a dificuldade diagnóstica soma-se à fadiga decisória acumulada.', errors: ['Seguir sem foco.', 'Registrar tudo e concluir pouco.'] },
+          { name: 'Diário do usuário', classification: 'dispensavel', summary: 'Registro pelo próprio usuário.', detail: 'Pode captar eventos fora da presença da equipe, mas exige alta adesão e costuma ser fraco no início. Exemplo, médicos sobrecarregados tendem a devolver registros incompletos.', errors: ['Esperar adesão alta.', 'Usar como substituto da observação.'] }
+        ]
+      },
+      {
+        number: 2,
+        title: 'Estruturação do Problema',
+        short: 'Definir qual dor importa.',
+        intro: 'Transformar dados dispersos em um problema claro, específico e priorizado.',
+        objective: 'Converter material bruto em formulação clara, específica, priorizada e acionável do problema.',
+        question: 'Entre tudo o que apareceu, qual problema merece foco agora?',
+        case: 'A equipe sai de “melhorar o atendimento vascular” e chega a “reduzir a incerteza diagnóstica em dor e edema agudo de membro inferior na UPA”.',
+        summary: 'Nesta fase, o projeto ganha foco. Sem esse recorte, toda solução futura tende a ser genérica.',
+        takeaways: ['Nem toda dor observada merece prioridade.', 'Problema amplo demais destrói clareza.', 'Segmentação é parte do foco.'],
+        mistake: 'Querer preservar todos os problemas ao mesmo tempo.',
+        colorClass: 'phase-2',
+        flowClass: 'flow-2',
+        tools: [
+          { name: 'Lista de dores recorrentes', classification: 'obrigatoria', summary: 'Organizar padrões.', detail: 'Agrupar dores semelhantes, registrar frequência e separar o que é problema central do que é efeito secundário.', errors: ['Misturar causa e efeito.', 'Escolher a dor mais chamativa.'] },
+          { name: 'Problem statement', classification: 'obrigatoria', summary: 'Escrever o problema com precisão.', detail: 'Formulação que inclui usuário, situação, dor concreta e impacto. Exemplo, médicos de UPA têm dificuldade de reduzir rapidamente a incerteza diante de dor ou edema agudo em membro inferior.', errors: ['Ser vago demais.', 'Misturar problema com solução.'] },
+          { name: 'Segmentação de clientes', classification: 'obrigatoria', summary: 'Escolher para quem validar.', detail: 'Dividir usuários possíveis em grupos distintos e escolher qual sente a dor mais estratégica. Exemplo, o segmento principal é o médico plantonista generalista.', errors: ['Querer servir a todos.', 'Confundir usuário e comprador.'] },
+          { name: 'Matriz dor x frequência', classification: 'desejavel', summary: 'Priorizar por impacto e recorrência.', detail: 'Cruzar intensidade da dor com frequência de ocorrência para apoiar decisão. Exemplo, a incerteza em dor e edema agudo aparece como combinação forte de frequência e impacto.', errors: ['Fingir precisão matemática.', 'Ignorar discussão qualitativa.'] }
+        ]
+      },
+      {
+        number: 3,
+        title: 'Modelagem do Comportamento',
+        short: 'Entender como o usuário decide.',
+        intro: 'Compreender como o usuário pensa, sente e age diante da dor. Solução desejável precisa caber no comportamento real.',
+        objective: 'Mapear como o usuário pensa, decide, sente, age e busca resolver o problema no contexto em que ele ocorre.',
+        question: 'Como o usuário realmente decide diante dessa dor?',
+        case: 'O médico da UPA não precisa de um curso longo. Ele precisa de um recurso breve para reduzir incerteza sem travar o plantão.',
+        summary: 'Nesta fase, a equipe descobre o trabalho real que precisa ser feito e o contexto que molda o uso.',
+        takeaways: ['Perfil não basta, o centro é o trabalho a ser feito.', 'Tempo, medo e pressão mudam comportamento.', 'Boa solução no papel pode fracassar no fluxo real.'],
+        mistake: 'Confundir descrição do usuário com compreensão do comportamento.',
+        colorClass: 'phase-3',
+        flowClass: 'flow-3',
+        tools: [
+          { name: 'JTBD', classification: 'obrigatoria', summary: 'Definir o trabalho real.', detail: 'Estrutura que liga situação, ação desejada e resultado. Exemplo, no plantão, decidir rapidamente se há risco vascular importante.', errors: ['Descrever profissão e não trabalho.', 'Escrever JTBD genérico.'] },
+          { name: 'Mapa de Empatia', classification: 'desejavel', summary: 'Explorar o contexto emocional.', detail: 'Organizar o que o usuário vê, escuta, pensa, sente, fala e faz. Exemplo, o plantonista vê fila, escuta cobrança, sente medo de errar e usa atalhos cognitivos.', errors: ['Preencher por imaginação.', 'Usar como peça decorativa.'] },
+          { name: 'Persona', classification: 'desejavel', summary: 'Sintetizar o usuário prioritário.', detail: 'Representação fundamentada do segmento principal, com dores, restrições e critérios de decisão. Exemplo, médico de UPA com alta carga assistencial e baixa tolerância a soluções longas.', errors: ['Criar sem evidência.', 'Valorizar detalhes irrelevantes.'] },
+          { name: 'Jornada do usuário', classification: 'dispensavel', summary: 'Mapear a experiência completa.', detail: 'Útil mais adiante, mas cedo demais quando a dor principal ainda está sendo validada.', errors: ['Começar por ela cedo demais.', 'Mapear demais e aprender de menos.'] }
+        ]
+      },
+      {
+        number: 4,
+        title: 'Teste de Interesse',
+        short: 'Ver se a proposta faz sentido.',
+        intro: 'Expor a proposta ao usuário e verificar se ela desperta interesse claro, compreensível e relevante.',
+        objective: 'Verificar se a solução proposta desperta interesse inicial concreto e se o usuário reconhece nela potencial de valor.',
+        question: 'A solução proposta desperta interesse real ou apenas curiosidade?',
+        case: 'A proposta passa a ser uma ferramenta rápida, acessível no celular, para reconhecer sinais de alarme e reduzir incerteza.',
+        summary: 'A solução começa a ganhar forma, mas o aprendizado mais valioso continua sendo descobrir o que o usuário rejeita, simplifica ou valoriza.',
+        takeaways: ['Aprovação verbal não basta.', 'Proposta precisa ser curta e clara.', 'Tangibilidade melhora o aprendizado.'],
+        mistake: 'Confundir curiosidade com valor percebido.',
+        colorClass: 'phase-4',
+        flowClass: 'flow-4',
+        tools: [
+          { name: 'Teste de conceito', classification: 'obrigatoria', summary: 'Apresentar a ideia em linguagem simples.', detail: 'Expor problema, solução, contexto de uso e benefício principal sem produto pronto. Exemplo, médicos avisam que não usarão se a solução parecer aula longa no plantão.', errors: ['Fazer pitch em vez de teste.', 'Aceitar elogio genérico como validação.'] },
+          { name: 'Protótipo simples', classification: 'obrigatoria', summary: 'Tornar a proposta tangível.', detail: 'Representação mínima da solução. Exemplo, o wireframe mostra que texto demais destrói aderência no fluxo do plantão.', errors: ['Refinar demais cedo.', 'Testar tudo de uma vez.'] },
+          { name: 'Landing page', classification: 'desejavel', summary: 'Medir interesse em escala maior.', detail: 'Página simples com proposta de valor e chamada para ação. Exemplo, mostra se o problema ressoa além do pequeno grupo inicial.', errors: ['Confundir clique com uso.', 'Usar mensagem vaga.'] },
+          { name: 'Fake door', classification: 'desejavel', summary: 'Medir intenção real de ação.', detail: 'Oferecer acesso a funcionalidade ainda inexistente e observar tentativa de uso. Exemplo, o clique em “iniciar triagem rápida vascular” vale mais que elogio verbal.', errors: ['Usar sem hipótese clara.', 'Gerar frustração desnecessária.'] }
+        ]
+      },
+      {
+        number: 5,
+        title: 'Validação Comportamental',
+        short: 'Confirmar valor pelo uso.',
+        intro: 'Passar da fala para a ação. O critério final da desejabilidade é comportamento observável, não simpatia intelectual.',
+        objective: 'Confirmar valor percebido por meio de comportamento observável, uso efetivo e sinais concretos de aderência.',
+        question: 'O comportamento do usuário confirma que há valor percebido real?',
+        case: 'A pergunta final deixa de ser “os médicos gostaram” e passa a ser “eles conseguem usar sem abandonar a solução em contexto de pressão”.',
+        summary: 'A desejabilidade torna-se robusta quando o comportamento confirma valor, e não apenas quando a ideia parece interessante.',
+        takeaways: ['Uso real vale mais do que opinião.', 'Métricas simples já ajudam muito.', 'Elogio sem comportamento é insuficiente.'],
+        mistake: 'Encerrar a validação porque alguns usuários elogiaram a solução.',
+        colorClass: 'phase-5',
+        flowClass: 'flow-5',
+        tools: [
+          { name: 'Teste de uso real', classification: 'obrigatoria', summary: 'Observar interação concreta.', detail: 'Colocar a solução em cenário simulado, controlado ou real e registrar entendimento, hesitação, abandono e conclusão.', errors: ['Ajudar demais durante o teste.', 'Ignorar abandono e hesitação.'] },
+          { name: 'Feedback estruturado', classification: 'obrigatoria', summary: 'Coletar percepção comparável.', detail: 'Perguntar de modo organizado sobre clareza, utilidade, barreiras e condições para virar hábito.', errors: ['Perguntar de forma vaga demais.', 'Ignorar o comportamento observado.'] },
+          { name: 'Métricas simples', classification: 'obrigatoria', summary: 'Quantificar sinais básicos de valor.', detail: 'Medir taxa de conclusão, tempo de uso, retorno e pedido de acesso posterior.', errors: ['Medir tudo e não decidir nada.', 'Usar métricas de vaidade.'] },
+          { name: 'NPS', classification: 'dispensavel', summary: 'Métrica de recomendação, útil mais tarde.', detail: 'Após um teste único, é mais importante saber se o usuário voltaria a usar do que se recomendaria.', errors: ['Aplicar cedo demais.', 'Tratar recomendação como substituto de uso.'] }
+        ]
+      }
+    ];
+
+    const timelineEl = document.getElementById('timeline');
+    const flowchartEl = document.getElementById('flowchart');
+    const phaseTitle = document.getElementById('phaseTitle');
+    const phaseIntro = document.getElementById('phaseIntro');
+    const phaseObjective = document.getElementById('phaseObjective');
+    const phaseQuestion = document.getElementById('phaseQuestion');
+    const phaseCase = document.getElementById('phaseCase');
+    const phaseSummary = document.getElementById('phaseSummary');
+    const phaseTakeaways = document.getElementById('phaseTakeaways');
+    const phaseMistake = document.getElementById('phaseMistake');
+    const toolsGrid = document.getElementById('toolsGrid');
+    const panelTop = document.getElementById('panelTop');
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+
+    let active = 0;
+
+    function labelClass(v) {
+      if (v === 'obrigatoria') return 'Obrigatória';
+      if (v === 'desejavel') return 'Desejável';
+      return 'Dispensável';
+    }
+
+    function renderNavigation() {
+      timelineEl.innerHTML = phases.map((p, i) => `
+        <div class="phase-node ${p.colorClass} ${i === active ? 'active' : ''}" data-index="${i}">
+          <div class="dot">${p.num
